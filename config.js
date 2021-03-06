@@ -22,6 +22,8 @@ const nhentai = require('nhentai-js')
 const { API } = require('nhentai-api')
 const { removeBackgroundFromImageBase64 } = require('remove.bg')
 const fetch = require('node-fetch')
+const ms = require('parse-ms')
+const toMs = require('ms')
 
 // UTILIDADES
 const color = require('./lib/color')
