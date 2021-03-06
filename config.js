@@ -539,6 +539,7 @@ const double = Math.floor(Math.random() * 2) + 1
         case 'figurinha':
         case 'stiker':
 	case 's':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
 			limit.addLimit(sender.id, _limit, isPremium, isOwner)
@@ -582,7 +583,8 @@ const double = Math.floor(Math.random() * 2) + 1
             }
             break
 			
-            case 'afk': // by Slavyan
+			case 'afk': // by Slavyan	
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
                 if (!isGroupMsg) return await kill.reply(from, ind.groupOnly(), id)
                 if (isAfkOn) return await kill.reply(from, ind.afkOnAlready(), id)
                 const reason = q ? q : 'Sin razon'
@@ -592,6 +594,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			case 'aidenaaaaaaa':
 		case 'aidenaaaaaaaa':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			//SI VAN A MODIFICAR EL BOT, PORFAVOR NO QUITAR NI MODIFICAR ESTA PARTE PORFAVOR, GRACIAS.
     			await kill.reply(from, '😍🤗 *GRACIAS POR INTERESARTE EN MI* Y GRACIAS POR USAR MI BOT\n\n*TE GUSTARIA APOYARME?😖*\nPls no es complicado, solo te pido una suscripcion a mi canal:D\nSI?😰\nAIIII GRACIAS☺, AVER PS, AQUI TE DEJO MI CANAL:D\n\nhttps://www.youtube.com/channel/UCHD4T8Pfcv5PFVzsAbfAPZA\n\n_SI COMPARTES ME AYUDARIAS MAS_ *GRACIAS!😉*', id)
    			break
@@ -599,6 +602,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 
 		case 'ttp':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, '¿Dónde está la frase?', id)
 			axios.get(`https://st4rz.herokuapp.com/api/ttp?kata=${body.slice(5)}`)
@@ -609,6 +613,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'wasted':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             if (isMedia && type === 'image' || isQuotedImage) {
                 const wastedmd = isQuotedImage ? quotedMsg : message
                 const wstddt = await decryptMedia(wastedmd, uaOverride)
@@ -630,11 +635,13 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'about':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			await kill.sendFile(from, './lib/media/img/iris.png', 'iris.png', sobre, id)
 			break
 			
 		case 'belle':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			await kill.sendFile(from, './lib/media/img/belle.png', 'belle.png', belle, id)
 			break
@@ -642,6 +649,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
         case 'stickernobg':
 	case 'snobg':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isMedia) {
                 try {
@@ -664,6 +672,7 @@ const double = Math.floor(Math.random() * 2) + 1
         case 'stickergif':
         case 'gifsticker':
         case 'gif':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isMedia && type === 'video' || mimetype === 'image/gif' || isQuotedVideo || isQuotedGif) {
                 await kill.reply(from, mess.wait, id)
@@ -684,6 +693,7 @@ const double = Math.floor(Math.random() * 2) + 1
 	
 
 		case 'simg':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado [Silence]')
             if (isMedia && type === 'image' || isQuotedImage) {
                 const shimgoh = isQuotedImage ? quotedMsg : message
@@ -713,6 +723,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 
 		case 'upimg':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado [Silence]')
             if (isMedia && type === 'image' || isQuotedImage) {
                 const upimgoh = isQuotedImage ? quotedMsg : message
@@ -734,6 +745,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'makesticker':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Falta algo para usar como referencia!', id)
             const stkm = await fetch(`http://api.fdci.se/rep.php?gambar=${body.slice(7)}`)
@@ -749,6 +761,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 		case 'morte':
 		case 'death':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Ponga un nombre, solo uno, sin apellido ni nombres completos, especialmente por su seguridad!', id)
 			const predea = await axios.get(`https://api.agify.io/?name=${args[0]}`)
@@ -757,6 +770,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 	    case 'oculto':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isGroupMsg) return kill.reply(from, 'Solo grupos!', id)
             const eur = await kill.getGroupMembers(groupId)
@@ -771,6 +785,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 		case 'gender':
 		case 'genero':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Ponga un nombre, solo uno, sin apellido ni nombres completos, ¡especialmente por su seguridad!', id)
 			const seanl = await axios.get(`https://api.genderize.io/?name=${args[0]}`)
@@ -780,6 +795,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'detector' :
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             if (!isGroupMsg) return kill.reply(from, 'Solo grupos!', id)
 			await kill.reply(from, 'Calculando foto de los participantes del grupo...', id)
             await sleep(3000)
@@ -793,6 +809,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'math':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'No especificaste una exprecion matemáticas.', id)
             const mtk = body.slice(6)
@@ -805,6 +822,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'inverter':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'No especificó una frase para invertir.', id)
 			const inver = body.slice(10).split('').reverse().join('')
@@ -813,6 +831,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'contar':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Esto tiene 0 letras, después de todo, no hay texto.', id)
 			const count = body.slice(8).length
@@ -821,6 +840,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'giphy':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			gark = body.trim().split(/ +/).slice(1)
 			const link = gark.length !== 0 ? gark[0] : ''
@@ -849,6 +869,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
 		case 'msg':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Olvidaste ingresar un mensaje... e.e', id)
 			await kill.sendText(from, `${body.slice(5)}`)
@@ -856,12 +877,14 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'id':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
 			kill.reply(from, `A ID desse grupo é ${groupId}`, id)
 			break
 			
         case 'fake':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isGroupMsg && isGroupAdmins) {
 				if (args.length !== 1) return kill.reply(from, 'Olvidaste establecerlo activo [on], o desactivado [off].', id)
@@ -894,6 +917,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'blacklist':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg && isGroupAdmins) {
 				if (args.length !== 1) return kill.reply(from, 'Defina entre on y off!', id)
@@ -926,6 +950,7 @@ const double = Math.floor(Math.random() * 2) + 1
 		
 			
         case 'bklist':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg && isGroupAdmins) {
 				if (args[0] == 'on') {
@@ -970,6 +995,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 	    case 'onlyadms':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			onar = body.trim().split(/ +/).slice(1)
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
@@ -987,6 +1013,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'program':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isGroupMsg) return kill.reply(from, 'Es posible que este grupo no permita enlaces, así que use este comando en el PV ok?', id)
 			kill.sendLinkWithAutoPreview(from, 'https://chat.whatsapp.com/CkwDQ0JF19tH5Gor6TqV9E', '¡Qué bueno que te hayas interesado en Support! \n¡Aquí está nuestro grupo!!', id)
@@ -994,6 +1021,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'revoke':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             if (!isGroupAdmins) return kill.reply(from, mess.error.Ga, id)
@@ -1003,6 +1031,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'slogan':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Y la frase?', id)
             const slog = await axios.get(`http://api.haipbis.xyz/randomcooltext?text=${body.slice(8)}`)
@@ -1011,6 +1040,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'setimage':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             if (!isGroupAdmins) return kill.reply(from, mess.error.Ga, id)
@@ -1047,6 +1077,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 			
 		case 'img':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isQuotedSticker) {
                 await kill.reply(from, mess.wait, id)
@@ -1064,6 +1095,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			break
 
         case 'randomanime':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const nime2 = await randomNimek('anime')
 			console.log(nime2.data)
@@ -1072,6 +1104,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'frase':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (double == 1) {
 				const skya = await axios.get('https://mhankbarbar.tech/api/quotesnime/random').json() 
@@ -1088,6 +1121,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'make':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, `Você precisa inserir uma frase após o comando.`, id)
             const nulisq = body.slice(6)
@@ -1100,6 +1134,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'neko':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const nekol = Math.floor(Math.random() * 4) + 1
             if (nekol == 1) {
@@ -1119,6 +1154,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'image':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Falto u nombre!', id)
             const linp = await fetch(`http://api.fdci.se/rep.php?gambar=${body.slice(7)}`)
@@ -1133,6 +1169,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'yaoi':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const yam = await fetch(`http://api.fdci.se/rep.php?gambar=yaoi`)
 			const yaoi = await yam.json()
@@ -1144,7 +1181,8 @@ const double = Math.floor(Math.random() * 2) + 1
             break
 
 
-        case 'life': 
+		case 'life': 
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             const dia = await axios.get(`https://docs-jojo.herokuapp.com/api/fml`)
 			var acon = dia.data.result.fml
             await sleep(5000)
@@ -1154,6 +1192,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'fox':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const fox = await axios.get(`https://some-random-api.ml/img/fox`)
 			await kill.sendFileFromUrl(from, fox.data.link, ``, 'Que hermoso zorro <3', id)
@@ -1161,6 +1200,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'wiki':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Por favor, escriba correctamente.', id)
             const wiki = await axios.get(`https://docs-jojo.herokuapp.com/api/wiki?q=${body.slice(6)}`)
@@ -1174,6 +1214,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'nasa':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
         	if (args[0] == '-data') {
             	const nasa = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=${args[1]}`)
@@ -1194,6 +1235,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'stalkig':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado.')
             if (args.length == 0) return kill.reply(from, 'Establecer un nombre de perfil para la búsqueda.', id)
             const ig = await axios.get(`https://docs-jojo.herokuapp.com/api/stalk?username=${body.slice(9)}`)
@@ -1204,6 +1246,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 
         case 'stalktw':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Y el username?', id)
             const tw = await axios.get(`http://arugaz.my.id/api/media/stalktwitt?user=${body.slice(9)}`)
@@ -1213,6 +1256,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 
         case 'twitter':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Y el link?', id)
             const twi = await axios.get(`http://arugaz.my.id/api/media/twvid?url=${body.slice(4)}`)
@@ -1224,6 +1268,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'ig':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Y el link?', id)
             const iga = await axios.get(`https://arugaz.my.id/api/media/ig?url=${body.slice(4)}`)
@@ -1235,6 +1280,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'fatos':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			var anifac = ["dog", "cat", "bird", "panda", "fox", "koala"];
 			var tsani = anifac[Math.floor(Math.random() * anifac.length)];
@@ -1247,6 +1293,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'sporn':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             try {
 				if (isGroupMsg) {
@@ -1268,6 +1315,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'xvideos':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             try {
 				if (isGroupMsg) {
@@ -1289,6 +1337,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
 		case 'fb':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Olvidaste insertar un enlace de facebook?', id)
             const fb = await axios.get(`https://mnazria.herokuapp.com/api/fbdownloadervideo?url=${body.slice(4)}`)
@@ -1301,6 +1350,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
         case 'mp3':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
             axios.get(`http://st4rz.herokuapp.com/api/yta2?url=${body.slice(5)}`)
@@ -1315,6 +1365,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			break
 
         case 'dp3':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
 			const cmdws = exec(`rm ./lib/myfile.mp3 && ytdl ${body.slice(5)}  | ffmpeg -i pipe:0 -b:a 192K -vn lib/myfile.mp3`, function(stderr, data) {
@@ -1329,6 +1380,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			break
 
         case 'mp4':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
             axios.get(`http://st4rz.herokuapp.com/api/ytv2?url=${body.slice(5)}`)
@@ -1344,6 +1396,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'play':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado.')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
             axios.get(`https://docs-jojo.herokuapp.com/api/yt-search?q=${body.slice(6)}`)
@@ -1383,6 +1436,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'video':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado.')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
             axios.get(`https://docs-jojo.herokuapp.com/api/yt-search?q=${body.slice(6)}`)
@@ -1421,6 +1475,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 
 		case 'qr':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const qrco = body.slice(4)
 			await kill.sendFileFromUrl(from, `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrco}`, '', 'Su mensaje fue insertado en este QRCode, disfrute.\n\nBy aiden-iris.', id)
@@ -1428,6 +1483,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
 		case 'send':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Olvidaste poner un enlace de imagen jaja!', id)
 			const file = body.slice(6)
@@ -1448,6 +1504,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			
 			
         case 'quote':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 		    arks = body.trim().split(/ +/).slice(1)
             ark = body.trim().substring(body.indexOf(' ') + 1)
@@ -1468,6 +1525,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
        case 'translate':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length != 1) return kill.reply(from, `Esto es demasiado pequeño para traducirlo...`, id)
             if (!quotedMsg) return kill.reply(from, `Olvidaste marcar el mensaje para traducir.`, id)
@@ -1481,6 +1539,7 @@ const double = Math.floor(Math.random() * 2) + 1
 
 
 case 'tts':
+	if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             if (args.length == 1) return kill.reply(from, 'Comprensible, pero no utilizable, olvidó definir el idioma y la frase.')
             const dataText = body.slice(8)
             var dataBhs = body.slice(5, 7)
@@ -1493,12 +1552,14 @@ case 'tts':
             break
 
         case 'idiomas':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             kill.sendText(from, lang, id)
             break
 			
 			
 		case 'resposta':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Falta una frase para agregar.', id)
 			fs.appendFile('./lib/config/reply.txt', `\n${body.slice(10)}`)
@@ -1507,6 +1568,7 @@ case 'tts':
 
 
         case 'speak':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const sppt = require('node-gtts')('es')
 			try {
@@ -1540,6 +1602,7 @@ case 'tts':
 			
 			
         case 'curiosidade':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const rcurio = fs.readFileSync('./lib/config/curiosidades.txt').toString().split('\n')
 			const rsidd = rcurio[Math.floor(Math.random() * rcurio.length)]
@@ -1549,6 +1612,7 @@ case 'tts':
 			
 			
         case 'trecho':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const rcit = fs.readFileSync('./lib/config/frases.txt').toString().split('\n')
 			const racon = rcit[Math.floor(Math.random() * rcit.length)]
@@ -1558,12 +1622,14 @@ case 'tts':
 			
 
         case 'creador':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             kill.sendContact(from, config.owner)
 			kill.reply(from, 'Si no responde, solo espera, es raro que deje Internet ~o se murio? :o~, pero si sucedió, fue algo importante..', id)
             break
 			
 			
 		case 'aki':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			try {
 				if (args[0] == '-r') {
@@ -1590,6 +1656,7 @@ case 'tts':
 			
 
         case 'iris':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			try {
 				const iris = await axios.get(`http://simsumi.herokuapp.com/api?text=${body.slice(6)}&lang=es`)
@@ -1615,6 +1682,7 @@ case 'tts':
 
 
         case 'wallpaper':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Necesitas decirme que quieres de fondo de pantalla!', id)
             const quere = body.slice(6)
@@ -1625,6 +1693,7 @@ case 'tts':
 
 
         case 'ping':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             kill.sendText(from, `Pong xd!\n_Mi velocidad es de ${processTime(t, moment())} segundos._`)
             break
@@ -1632,11 +1701,13 @@ case 'tts':
 
         case 'donate':
 		case 'doar':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             kill.sendText(from, donate, id)
             break
 
 
         case 'roll':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const dice = Math.floor(Math.random() * 6) + 1
             await kill.sendStickerfromUrl(from, 'https://www.random.org/dice/dice' + dice + '.png')
@@ -1644,6 +1715,7 @@ case 'tts':
 
 
         case 'flip':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const side = Math.floor(Math.random() * 2) + 1
             if (side == 1) {
@@ -1666,6 +1738,7 @@ case 'tts':
 
 
        case 'newpoll':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             feature.adminpollreset(kill, message, message.body.slice(9), pollfile, voterslistfile)
             break
@@ -1677,6 +1750,7 @@ case 'tts':
 
 
         case 'nsfw':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             if (args.length !== 1) return kill.reply(from, 'Defina enable o disable', id)
 			if (isGroupMsg && isGroupAdmins || isGroupMsg && isOwner) {
 				if (args[0].toLowerCase() == 'enable') {
@@ -1699,6 +1773,7 @@ case 'tts':
 
 
         case 'welcome':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
 			if (!isOwner) return kill.reply(from, mess.error.Kl, id)
@@ -1719,6 +1794,7 @@ case 'tts':
 			
 			
 		case 'macaco':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			var item = ["macaco", "gorila", "chimpanzé", "orangotango", "babuino"]
     	    var esco = item[Math.floor(Math.random() * item.length)]
@@ -1734,6 +1810,7 @@ case 'tts':
 			
 			
 		case 'ball':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const ball = await axios.get('https://nekos.life/api/v2/img/8ball')
 			await kill.sendFileFromUrl(from, ball.data.url, '', '', id)
@@ -1741,6 +1818,7 @@ case 'tts':
 			
 			
 		case 'cafune':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (double == 1) {
 				const cfne = await axios.get('https://nekos.life/api/v2/img/pat')
@@ -1753,6 +1831,7 @@ case 'tts':
 			
 			
 		case 'quack':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const patu = await axios.get('https://nekos.life/api/v2/img/goose')
 			await kill.sendFileFromUrl(from, patu.data.url, '', '', id)
@@ -1760,6 +1839,7 @@ case 'tts':
 			
 
 		case 'poke':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const teco = await axios.get('https://nekos.life/api/v2/img/poke')
 			await kill.sendFileFromUrl(from, teco.data.url, '', '', id)
@@ -1767,6 +1847,7 @@ case 'tts':
 			
 
 		case 'cocegas':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const cocegas = await axios.get('https://nekos.life/api/v2/img/tickle')
 			await kill.sendFileFromUrl(from, cocegas.data.url, '', '', id)
@@ -1774,6 +1855,7 @@ case 'tts':
 			
 			
 		case 'feed':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const feed = await axios.get('https://nekos.life/api/v2/img/tickle')
 			await kill.sendFileFromUrl(from, feed.data.url, '', '', id)
@@ -1781,6 +1863,7 @@ case 'tts':
 			
 			
 		case 'baka':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const baka = await axios.get('https://nekos.life/api/v2/img/baka')
 			await kill.sendFileFromUrl(from, baka.data.url, '', '', id)
@@ -1789,6 +1872,7 @@ case 'tts':
 			
 		case 'lizard':
 		case 'lagarto':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const lizard = await axios.get('https://nekos.life/api/v2/img/lizard')
 			await kill.sendFileFromUrl(from, lizard.data.url, '', '', id)
@@ -1796,6 +1880,7 @@ case 'tts':
 			
 
 case 'google':
+	if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             if (args.length == 0) return kill.reply(from, `Digite algo para buscar.`, id)
 		    const googleQuery = body.slice(8)
             google({ 'query': googleQuery }).then(results => {
@@ -1811,6 +1896,7 @@ case 'google':
 			
 			
        case 'clima':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
        		if (args.length == 0) return kill.reply(from, 'Escriba el nombre de la ciudad.', id)
             try {
@@ -1823,6 +1909,7 @@ case 'google':
 			
 			
         case 'boy':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
     	    var hite = ["eboy", "garoto", "homem", "men", "garoto oriental", "japanese men", "pretty guy", "homem bonito"];
     	    var hesc = hite[Math.floor(Math.random() * hite.length)];
@@ -1837,6 +1924,7 @@ case 'google':
 			
 			
       case 'mod':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Una app a buscar?!', id)
             try {
@@ -1852,6 +1940,7 @@ case 'google':
 			
 			
         case 'happymod':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Una app a buscar?!', id)
             try {
@@ -1867,6 +1956,7 @@ case 'google':
 			
 
         case 'girl':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
     	    var items = ["garota adolescente", "saycay", "alina nikitina", "belle delphine", "teen girl", "teen cute", "japanese girl", "garota bonita oriental", "oriental girl", "korean girl", "chinese girl", "e-girl", "teen egirl", "brazilian teen girl", "pretty teen girl", "korean teen girl", "garota adolescente bonita", "menina adolescente bonita", "egirl", "cute girl"];
     	    var cewe = items[Math.floor(Math.random() * items.length)];
@@ -1882,6 +1972,7 @@ case 'google':
 
 
         case 'anime':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 		    if (args.length == 0) return kill.reply(from, 'Especifique el nombre de un anime!', id)
             const keyword = message.body.replace('/anime', '')
@@ -1913,6 +2004,7 @@ case 'google':
 
 
         case 'nh':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -1972,6 +2064,7 @@ case 'google':
 
 
         case 'profile':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
 				if (!quotedMsg) {
@@ -2005,6 +2098,7 @@ case 'google':
 
 
         case 'brainly':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length >= 2){
                 let tanya = body.slice(9)
@@ -2029,6 +2123,7 @@ case 'google':
 
 
 		case 'store':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Especifique el nombre de la aplicación que desea buscar.', id)
 			kill.reply(from, mess.wait, id)
@@ -2040,6 +2135,7 @@ case 'google':
 
 
         case 'search':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
                 if (isMedia) {
@@ -2083,6 +2179,7 @@ case 'google':
             break
 
         case 'link':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
             if (isGroupMsg) {
@@ -2107,6 +2204,7 @@ case 'google':
             break
 			
         case 'ptt':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (quotedMsgObj) {
                 let encryptMedia
@@ -2126,6 +2224,7 @@ case 'google':
 			
 			
         case 'get':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (quotedMsgObj) {
                 let encryptMedia
@@ -2145,6 +2244,7 @@ case 'google':
 
 
         case 'adms':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             let mimin = ''
@@ -2157,6 +2257,7 @@ case 'google':
 
 
         case 'groupinfo' :
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             var totalMem = chat.groupMetadata.participants.length
             var desc = chat.groupMetadata.desc
@@ -2181,6 +2282,7 @@ case 'google':
 			
 			
         case 'ownergroup':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             const Owner_ = chat.groupMetadata.owner
@@ -2189,6 +2291,7 @@ case 'google':
 			
 
 		case 'maps':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, `Pon un nombre de un lugar`, id)
             const mapz = body.slice(6)
@@ -2206,6 +2309,7 @@ case 'google':
 			
 			
 		case 'sip':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 1) {
 				const ip = await axios.get(`http://ipwhois.app/json/${body.slice(5)}`)
@@ -2217,6 +2321,7 @@ case 'google':
 			
 			
 		case 'scep':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 1) {
 				const cep = await axios.get(`https://viacep.com.br/ws/${body.slice(6)}/json/`)
@@ -2228,6 +2333,7 @@ case 'google':
 
 
 	case 'everyone':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (isGroupMsg && isGroupAdmins || isGroupMsg && isOwner) {
 				const groupMem = await kill.getGroupMembers(groupId)
 				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n⚠╠✪〘 Asunto: ${body.slice(10)} 〙✪═\n`
@@ -2247,6 +2353,7 @@ case 'google':
 
 
         case 'random':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             const memran = await kill.getGroupMembers(groupId)
@@ -2258,6 +2365,7 @@ case 'google':
 
 
         case 'kickall':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const isdonogroup = sender.id === chat.groupMetadata.owner
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
@@ -2300,6 +2408,7 @@ case 'google':
 
 
 	    case 'add':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
@@ -2313,6 +2422,7 @@ case 'google':
 			
 			
 		case '3d':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) kill.reply(from, 'Coloca un mensaje!', id)
 			kill.reply(from, mess.wait, id)
@@ -2321,6 +2431,7 @@ case 'google':
 			
 			
 		case 'gaming':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) kill.reply(from, 'Coloca un mensaje!', id)
 			kill.reply(from, mess.wait, id)
@@ -2329,6 +2440,7 @@ case 'google':
 		
 		
 		case 'fogareu':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) kill.reply(from, 'Coloca un mensaje!', id)
 			kill.reply(from, mess.wait, id)
@@ -2337,6 +2449,7 @@ case 'google':
 			
 			
 		case 'thunder':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) kill.reply(from, 'Coloca un mensaje!', id)
 			kill.reply(from, mess.wait, id)
@@ -2345,6 +2458,7 @@ case 'google':
 			
 
 		case 'light':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) kill.reply(from, 'Coloca un mensaje!', id)
 			kill.reply(from, mess.wait, id)
@@ -2353,6 +2467,7 @@ case 'google':
 			
 
 		case 'wolf':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             arkp = body.trim().substring(body.indexOf(' ') + 1)
             if (args.length >= 2) {
@@ -2367,6 +2482,7 @@ case 'google':
 			
 
 		case 'neon':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             arkt = body.trim().substring(body.indexOf(' ') + 1)
             if (args.length >= 3) {
@@ -2382,6 +2498,7 @@ case 'google':
 			
 
         case 'porn':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -2395,6 +2512,7 @@ case 'google':
 			
 			
         case 'lesbian':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -2409,6 +2527,7 @@ case 'google':
 			
 			
         case 'pgay':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -2422,6 +2541,7 @@ case 'google':
 		
 		
 		case 'logo':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) kill.reply(from, 'Coloca un nombre!', id)
 			kill.reply(from, mess.wait, id)
@@ -2430,6 +2550,7 @@ case 'google':
 	
 			
 		case 'pornhub':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             arkp = body.trim().substring(body.indexOf(' ') + 1)
             if (args.length >= 2) {
@@ -2444,6 +2565,7 @@ case 'google':
             break
 			
         case 'meme':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             ark = body.trim().substring(body.indexOf(' ') + 1)
             if ((isMedia || isQuotedImage) && args.length >= 2) {
@@ -2463,6 +2585,7 @@ case 'google':
 			
 		case 'unban':		
 		case 'unkick':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isGroupMsg && isGroupAdmins) {
 				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
@@ -2485,6 +2608,7 @@ case 'google':
 
 
         case 'kick':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (isGroupMsg && isGroupAdmins || isGroupMsg && isOwner) {
 				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
 				if (quotedMsg) {
@@ -2509,6 +2633,7 @@ case 'google':
 
 
         case 'leave':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isGroupMsg && isGroupAdmins) {
 				await kill.sendText(from,'Tendré que irme, pero nos volveremos a ver pronto! <3').then(() => kill.leaveGroup(groupId))
@@ -2526,6 +2651,7 @@ case 'google':
 				break
 
         case 'promote':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isGroupMsg && isGroupAdmins) {
 				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
@@ -2564,6 +2690,7 @@ case 'google':
 
 
         case 'demote':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isGroupMsg && isGroupAdmins) {
 				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
@@ -2602,6 +2729,7 @@ case 'google':
 
 
         case 'botstat':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const loadedMsg = await kill.getAmountOfLoadedMessages()
             const chatIds = await kill.getAllChatIds()
@@ -2611,6 +2739,7 @@ case 'google':
 
 
         case 'join':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'No lo sé, hay algo mal en eso!', id)
             const gplk = body.slice(6)
@@ -2631,6 +2760,7 @@ case 'google':
 
         case 'delete':
         case 'del':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isGroupMsg && isGroupAdmins) {
 				if (!quotedMsg) return kill.reply(from, 'Necesitas marcar el mensaje que quieres borrar, obviamente, uno de los míos.', id)
@@ -2650,6 +2780,7 @@ case 'google':
 
 
         case 'tela':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const sesPic = await kill.getSnapshot()
             kill.sendFile(from, sesPic, 'session.png', 'Neh...', id)
@@ -2657,6 +2788,7 @@ case 'google':
 			
 			
 		case 'placa':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado.')
 			if (args.length == 0) return kill.reply(from, 'Coloque una placa para buscar.', id)
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
@@ -2670,6 +2802,7 @@ case 'google':
 			
 
         case 'enviar':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const arka = body.trim().substring(body.indexOf(' ') + 1)
             if (args.length == 0) return kill.reply(from, 'Debe definir entre [-gp, -pv o -help] para usar!', id)
@@ -2722,6 +2855,7 @@ case 'google':
 			
 			
         case 'loli':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const onefive = Math.floor(Math.random() * 145) + 1
 			kill.sendFileFromUrl(from, `https://media.publit.io/file/Twintails/${onefive}.jpg`, 'loli.jpg', 'Veo que eres un hombre/mujer de cultura.', id)
@@ -2729,6 +2863,7 @@ case 'google':
 			
 
         case 'hug':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (double == 1) {
             const hug1 = await axios.get(`https://nekos.life/api/v2/img/hug`)
@@ -2741,6 +2876,7 @@ case 'google':
 			
 			
         case 'exclusive':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isGroupMsg) return kill.reply(from, 'Solo grupos!', id)
             if (args.length !== 1) return kill.reply(from, 'Defina entre on y off!', id)
@@ -2760,6 +2896,7 @@ case 'google':
 
 
         case 'baguette':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const baguette = await randomNimek('baguette')
             await kill.sendFileFromUrl(from, baguette, ``, '', id)
@@ -2767,6 +2904,7 @@ case 'google':
 
 
         case 'dva':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const dva1 = await randomNimek('dva') 
             await kill.sendFileFromUrl(from, dva1, ``, `Que ~gostosa~ linda!`, id)
@@ -2774,6 +2912,7 @@ case 'google':
 
 
         case 'waifu':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (double == 1) {
 				const total = fs.readFileSync('./lib/config/waifu.json')
@@ -2789,6 +2928,7 @@ case 'google':
 
 
         case 'husb':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const diti = fs.readFileSync('./lib/config/husbu.json')
             const ditiJsin = JSON.parse(diti)
@@ -2799,6 +2939,7 @@ case 'google':
 			
 			
         case 'iecchi':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -2828,6 +2969,7 @@ case 'google':
 			
 
         case 'tits':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -2887,6 +3029,7 @@ case 'google':
 			
 
 			case 'fuck':
+				if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 				if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 				fucks = body.trim().split(' ')
 				if (args.length == 1) {
@@ -2894,7 +3037,7 @@ case 'google':
 				if (isGroupMsg) {
 					if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 						const chfuck = await axios.get('https://nekos.life/api/v2/img/anal')
-						await kill.sendMp4AsSticker(from, chfuck.data.url, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 })
+						await kill.sendVideoAsGif(from, chfuck.data.url, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 })
 						await sleep(5000)
 						await kill.sendTextWithMentions(from, '@' + violador + ' Esta follando con ' + fucks[1] + ' u///u')
 					}
@@ -2904,6 +3047,7 @@ case 'google':
 					break
 			
 		case 'cum':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			fucks2 = body.trim().split(' ')
 			if (args.length == 1) {
@@ -2920,6 +3064,7 @@ case 'google':
 			}
 				break		
 	    case 'milf':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -2955,6 +3100,7 @@ case 'google':
 			
 			
         case 'bdsm':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -2990,6 +3136,7 @@ case 'google':
 
 
         case 'ass':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3025,6 +3172,7 @@ case 'google':
 	
 			
         case 'pussy':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3061,6 +3209,7 @@ case 'google':
 
         case 'blowjob':
         case 'boquete':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3079,6 +3228,7 @@ case 'google':
 
 			
         case 'feet':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3102,6 +3252,7 @@ case 'google':
 			
 			
         case 'hard':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3115,6 +3266,7 @@ case 'google':
 			
 			
         case 'boobs':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3138,6 +3290,7 @@ case 'google':
 			
 
         case 'lick':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3161,6 +3314,7 @@ case 'google':
 			
 			
         case 'femdom':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3190,6 +3344,7 @@ case 'google':
 
 
         case 'futanari':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3203,6 +3358,7 @@ case 'google':
 			
 			
         case 'masturb':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3232,6 +3388,7 @@ case 'google':
 			
 			
         case 'anal':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
 				if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3255,6 +3412,7 @@ case 'google':
 			
 			
 		case 'randomloli':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
 				if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3268,6 +3426,7 @@ case 'google':
 			
 			
         case 'nsfwicon':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
 				if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3281,6 +3440,7 @@ case 'google':
 			
 			
 		case 'truth':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const memean = await axios.get('https://nekos.life/api/v2/img/gecg')
 			await kill.sendFileFromUrl(from, memean.data.url, '', '', id)
@@ -3288,6 +3448,7 @@ case 'google':
 			
 
 		case 'icon':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const avatarz = await axios.get('https://nekos.life/api/v2/img/avatar')
 			await kill.sendFileFromUrl(from, avatarz.data.url, '', '', id)
@@ -3295,6 +3456,7 @@ case 'google':
 			
 			
 		case 'face':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const gasm = await axios.get('https://nekos.life/api/v2/img/gasm')
 			await kill.sendFileFromUrl(from, gasm.data.url, '', '', id)
@@ -3303,6 +3465,7 @@ case 'google':
 
 		case 'pezinho':
 		case 'pies':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3317,6 +3480,7 @@ case 'google':
 			
 		case 'gadometro':
 		case 'gado':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			gaak = body.trim().split(' ')
 			var chifre = ["ultra extreme gado", "Gado-Master", "Gado-Rei", "Gado", "Escravo-ceta", "Escravo-ceta Maximo", "Gacorno?", "Jogador De Forno Livre<3", "Mestre Do Frifai<3<3", "Gado-Manso", "Gado-Conformado", "Gado-Incubado", "Gado Deus", "Mestre dos Gados", "TPTDPBCT=Topa Tudo Por Buceta KKKJ", "Gado Comum", "Mini-Pedro", "Mini Gadinho", "Gado Iniciante", "Gado Basico", "Gado Intermediario", "Gado Avançado", "Gado Proffisional", "Gado Mestre", "Gado Chifrudo", "Corno Conformado", "Corno HiperChifrudo", "Chifrudo Deus", "Mestre dos Chifrudos"]
@@ -3329,6 +3493,7 @@ case 'google':
 			break
 			
 		case 'gamemode':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Olvidó ingresar si desea habilitar [1 o c o creativo], o inhabilitar [0 o s o supervivencia].', id)
 			if (args[0] == '1' || args[0] == 'c' || args[0] == 'creative') {
@@ -3342,6 +3507,7 @@ case 'google':
 
 
         case 'ihentai':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 		    const selnum = Math.floor(Math.random() * 6) + 1 
             if (isGroupMsg) {
@@ -3390,6 +3556,7 @@ case 'google':
 
 
         case 'yuri':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const yuri1 = await randomNimek('yuri')
 			console.log(yuri1)
@@ -3398,6 +3565,7 @@ case 'google':
 
 
         case 'randomneko':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3451,6 +3619,7 @@ case 'google':
 
 
         case 'trap':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3469,12 +3638,14 @@ case 'google':
 
 
         case 'randomwall' :
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             const walnime = await axios.get('https://nekos.life/api/v2/img/wallpaper')
             await kill.sendFileFromUrl(from, walnime.data.url, '', '', id)
             break
 			
 			
 		case 'valor':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Para usar ingrese el comando y luego el valor y escriba.\n\nEjemplo: /valor 1USD (Junto.)\n\nDigite /coins para ver la lista de monedas que pueden ser usadas [Es una lista enormeeeeee].', id)
 			const money = await axios.get(`https://brl.rate.sx/${args[0]}`)
@@ -3482,7 +3653,8 @@ case 'google':
 			break
 			
 			
-        case 'dog': 
+		case 'dog': 
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 		    if (double == 1) {
 				const list = await axios.get('http://shibe.online/api/shibes')
 				const doguin = list.data[0]
@@ -3495,18 +3667,21 @@ case 'google':
 			
 			
         case 'look' :
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             const smug = await axios.get('https://nekos.life/api/v2/img/smug')
             await kill.sendFileFromUrl(from, smug.data.url, '', '', id)
             break
 			
 			
         case 'holo' :
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             const holo = await axios.get('https://nekos.life/api/v2/img/holo')
             await kill.sendFileFromUrl(from, holo.data.url, '', '', id)
             break
 
 
 		case 'rolette':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (double == 1) {
             await kill.reply(from, 'Bang, ella disparó y tú moriste, se acabó el juego.', id)
@@ -3517,6 +3692,7 @@ case 'google':
 			
 			
 		case 'kisu':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const kisu = await axios.get('https://nekos.life/api/v2/img/kiss')
 			await kill.sendFileFromUrl(from, kisu.data.url, '', '', id)
@@ -3524,6 +3700,7 @@ case 'google':
 			
 			
 		case 'tapa':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const tapi = await axios.get('https://nekos.life/api/v2/img/slap')
 			await kill.sendFileFromUrl(from, tapi.data.url, '', '', id)
@@ -3532,6 +3709,7 @@ case 'google':
 
         case 'gato':
         case 'cat':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (double == 1) {
 				q2 = Math.floor(Math.random() * 900) + 300;
@@ -3545,6 +3723,7 @@ case 'google':
 
 
         case 'pokemon':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             q7 = Math.floor(Math.random() * 890) + 1;
             await kill.sendFileFromUrl(from, 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/' + q7 + '.png', 'Pokemon.png', '', id)
@@ -3552,6 +3731,7 @@ case 'google':
 
 
         case 'screenshot':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const _query = body.slice(12)
             if (!_query.match(isUrl)) return kill.reply(from, mess.error.Iv, id)
@@ -3564,6 +3744,7 @@ case 'google':
 			
 			
 		case 'ship':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             lvak = body.trim().split(' ')
 			if (args.length == 2) {
@@ -3575,6 +3756,7 @@ case 'google':
 			
 
         case 'gay':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             gaak = body.trim().split(' ')
     	    var lgbt = ["lésbica", "gay", "bissexual", "transgenero", "queer", "intersexual", "pedro-sexual", "negrosexual", "helicoptero sexual", "ageneros", "androgino", "assexual", "macaco-sexual", "dedo-sexual", "Sexo-Inexplicavel", "predio-sexual", "sexual-não-sexual", "pansexual", "kink", "incestuoso", "comedor-de-casadas", "unicornio-sexual", "maniaco-sexual"]
@@ -3588,6 +3770,7 @@ case 'google':
 			
 
 		case 'chance':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Establecer algo para analizar.', id)
 			await kill.reply(from, `_De acuerdo con mis cálculos súper avanzados de robot "" ..._ \n\n*"${body.slice(8)}"*\n\n_...la posibilidad de ser realidad es del_ *${lvpc}%.*`, id)
@@ -3595,6 +3778,7 @@ case 'google':
 
 
         case 'kiss':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             arqa = body.trim().split(' ')
 			if (args.length == 1) {
@@ -3612,6 +3796,7 @@ case 'google':
 
 
         case 'slap':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             arq = body.trim().split(' ')
             const person = author.replace('@c.us', '')
@@ -3621,6 +3806,7 @@ case 'google':
 
 
         case 'getmeme':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             const response = await axios.get('https://meme-api.herokuapp.com/gimme/memesmexico');
             const { postlink, title, subreddit, url, nsfw, spoiler } = response.data
@@ -3630,6 +3816,7 @@ case 'google':
 			
         case 'date':
         case 'data':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const timeda = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
 			await kill.reply(from, 'Ahora son exactamente\n"' + timeda + '"', id)
@@ -3637,6 +3824,7 @@ case 'google':
 		
 
         case 'menu':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const timed = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
 			const allin = `Hola usuário "@${sender.id}"!\n\nMe lleve ${processTime(t, moment())} segundos para responder😬Ando lag verdad?:(.\n\nAhora son exactamente "${timed}".\nAqui abajito estan mis funciones:D Porfavor tratame bien, si no quieres que deje tu grupo:).\n`
@@ -3646,6 +3834,7 @@ case 'google':
 
 
         case 'admins':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             if (!isGroupAdmins) return kill.reply(from, mess.error.Ga, id)
@@ -3654,12 +3843,14 @@ case 'google':
 
 
         case 'adult':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             kill.sendText(from, adult, id)
             break
 			
 
         case 'kill':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isOwner) return kill.reply(from, mess.error.Kl, id)
             kill.sendText(from, owner, id)
@@ -3667,18 +3858,21 @@ case 'google':
 
 
         case 'down':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             kill.sendText(from, down, id)
             break
 
 
         case 'readme':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             kill.reply(from, readme, id)
             break
 			
 		
 		case 'bomb':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 		    const bleg = JSON.parse(fs.readFileSync('./lib/config/exclusive.json'))
 			const biao = bleg.includes(chat.id)
@@ -3714,6 +3908,7 @@ case 'google':
 
 			
 		case 'mac':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Lo siento, pero debe especificar qué MAC desea extraer.', id)
 			await kill.reply(from, 'Espera, esta operación tarda unos 6 segundos debido a la limitación de tiempo..', id)
@@ -3727,6 +3922,7 @@ case 'google':
 			
 		case 'converter':
 		case 'conv':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args == 0) return kill.reply(from, 'Ingrese el modo de conversión y luego la temperatura, para más detalles ingrese /conv -h.', id)
 			if (args[0] == '-help' || args[0] == '-h') return kill.reply(from, convh, id)
@@ -3762,6 +3958,7 @@ case 'google':
 
         case 'mute':
         case 'silence':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (isGroupMsg && isGroupAdmins) {
 				if (args.length !== 1) return kill.reply(from, 'Olvidaste establecer entre activado [on], ou descativado [off].', id)
 				if (args[0] == 'on') {
@@ -3793,6 +3990,7 @@ case 'google':
 			
 			
 		case 'scnpj':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 1) {
 				const cnpj = await axios.get(`https://www.receitaws.com.br/v1/cnpj/${body.slice(7)}`)
@@ -3805,6 +4003,7 @@ case 'google':
 			
 			
 		case 'coins':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			await kill.reply(from, coins, id)
 			break
 			
@@ -3834,6 +4033,7 @@ case 'google':
 			
 			
         case 'autosticker':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado [Silence]')
             if (!isGroupMsg) return await kill.reply(from, mess.error.Gp, id)
             if (!isGroupAdmins) return await kill.reply(from, mess.error.Ga, id)
@@ -3884,6 +4084,7 @@ case 'google':
 			
 			
 		case 'allid':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			const gpids = await kill.getAllGroups()
 			let idmsgp = ''
 			for (let ids of gpids) {
@@ -3936,6 +4137,7 @@ case 'google':
 			
 			
 		case 'rank':
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
             if (isGroupMsg && isGroupAdmins || isGroupMsg && isOwner) {
 				if (args.length !== 1) return kill.reply(from, 'Defina entre on y off!', id)
 				if (args[0] == 'on') {
@@ -3954,6 +4156,7 @@ case 'google':
 			
 		
 	case 'level':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isxp) return await kill.reply(from, 'Para usar esto, active el sistema XP.', id)
             if (!isGroupMsg) return await kill.reply(from, mess.error.Gp, id)
@@ -3991,6 +4194,7 @@ case 'google':
             break
 			
 	case 'players':
+		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isGroupMsg) return kill.reply(from. mess.error.Gp, id)
             const cklvl = nivel
