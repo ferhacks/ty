@@ -462,6 +462,7 @@ const double = Math.floor(Math.random() * 2) + 1
                     await kill.reply(from, ind.wrongFormat(), id)
                 }
 			break
+			
 			case 'premiumcheck':
 				case 'cekpremium':
 					if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
