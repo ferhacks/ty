@@ -16,7 +16,7 @@ exports.afkDone = (pushname) => {
     return `*${pushname}* Ya no esta Afk`
 }
 exports.notRegistered = () => {
-    return `Uh.. Parece que no estas registrado, Usa \n*${prefix}register* mombre | edad!!`
+    return `Uh.. Parece que no estas registrado, Usa \n*/register* mombre | edad!!`
 }
 
 exports.registered = (name, age, userId, time, serial) => {
@@ -28,4 +28,13 @@ exports.registeredAlready = () => {
 }
 exports.notPremium = () => {
     return `No eres premium`
+}
+exports.pcOnly = () => {
+    return `Es solo para mi privado.`
+}
+exports.wrongFormat = () => {
+    return `Lo acabas de hacer mal, hazlo como aparece en /menu*.`
+}
+exports.ageOld = () => {
+    return `Asegurate de poner tu edad real, si es la real, Haz exedido los limites`
 }

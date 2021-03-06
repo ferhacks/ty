@@ -455,7 +455,20 @@ const double = Math.floor(Math.random() * 2) + 1
             
             await kill.reply(from, `Tiempo Activo:\n*_❏ ${formater(uptime)}_*`, id)
         break
-			
+
+		case 'register':
+			if (isRegistered) return await bocchi.reply(from, ind.registeredAlready(), id)
+			if (isGroupMsg) return await kill.reply(from, ind.pcOnly(), id)
+			if (!q.includes('|')) return await bocchi.reply(from, ind.wrongFormat(), id)
+			const namaUser = q.substring(0, q.indexOf('|') - 1)
+			const umurUser = q.substring(q.lastIndexOf('|') + 2)
+			const serialUser = createSerial(20)
+			if (Number(umurUser) >= 40) return await bocchi.reply(from, ind.ageOld(), id)
+			register.addRegisteredUser(sender.id, namaUser, umurUser, time, serialUser, _registered)
+			await bocchi.reply(from, ind.registered(namaUser, umurUser, sender.id, time, serialUser), id)
+			console.log(color('[REGISTER]'), color(time, 'yellow'), 'Name:', color(namaUser, 'cyan'), 'Age:', color(umurUser, 'cyan'), 'Serial:', color(serialUser, 'cyan'))
+		break
+
         case 'sticker':
         case 'fig':
         case 'figurinha':
