@@ -119,6 +119,9 @@ const { name, formattedTitle } = chat
 		const { ind } = require('./fuction/index')
 		const isPremium = premium.checkPremiumUser(sender.id, _premium)
 		const isRegistered = register.checkRegisteredUser(sender.id, _registered)
+		const createSerial = (size) => {
+			return crypto.randomBytes(size).toString('hex').slice(0, size)
+		}
 	
 	
 		       // AFK by Slavyan
