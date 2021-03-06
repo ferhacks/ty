@@ -399,7 +399,21 @@ const double = Math.floor(Math.random() * 2) + 1
 
         switch(command) {
 
-
+        case 'uptime': //Fix By Poker
+                    const formater = (seconds) => {
+                    const pad = (s) => {
+                        return (s < 10 ? '0' : '') + s
+                    }
+                    const hrs = Math.floor(seconds / (60 * 60))
+                    const mins = Math.floor(seconds % (60 * 60) / 60)
+                    const secs = Math.floor(seconds % 60)
+                    return ' ' + pad(hrs) + ':' + pad(mins) + ':' + pad(secs)
+                }
+                const uptime = process.uptime()
+            
+            await kill.reply(from, `Tiempo Activo:\n*_❏ ${formater(uptime)}_*`, id)
+        break
+			
         case 'sticker':
         case 'fig':
         case 'figurinha':
