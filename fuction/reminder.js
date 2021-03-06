@@ -11,8 +11,7 @@ const toMs = require('ms')
 const addReminder = (userId, message, time, _dir) => {
     const obj = { id: userId, msg: message, time: Date.now() + toMs(time) }
     _dir.push(obj)
-    fs.writeFileSync('const addReminder = (userId, message, time, _dir) => {
-', JSON.stringify(_dir))
+    fs.writeFileSync('./lib/config/reminder.json', JSON.stringify(_dir))
 }
 
 /**
