@@ -376,6 +376,16 @@ const double = Math.floor(Math.random() * 2) + 1
             await kill.sendImageAsSticker(from, imageBase64,{author: 'Aiden, Simp bot', pack: '+55 11 94753-2586' })
         }
 		
+        // Ignore banned and blocked users
+        if (isCmd && (isBanned || isBlocked) && !isGroupMsg) {
+		await kill.reply(from, 'Lo sentimos, Estas Baneado de SIMP bot, Contacta a Aiden ( wa.me/595986460945 ) Y el analizara tu caso', id)
+		return console.log(color('[BAN]', 'red'), color(time, 'yellow'), color(`${command} [${args.length}]`), 'De', color(pushname))
+	}
+		if (isCmd && (isBanned || isBlocked) && isGroupMsg){
+			await kill.reply(from, 'Lo sentimos, Estas Baneado de SIMP bot, Contacta a Aiden ( wa.me/595986460945 ) Y el analizara tu caso', id)
+			 return console.log(color('[BAN]', 'red'), color(time, 'yellow'), color(`${command} [${args.length}]`), 'De', color(pushname), 'En el grupo', color(name || formattedTitle))
+			}
+		
 
         // ANTI FLOOD PRIVADO
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('FLOOD AS', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'de', color(pushname)) }
