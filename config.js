@@ -29,7 +29,7 @@ const { owner, donate, down, help, admins, adult, readme, lang, convh } = requir
 const { stdout } = require('process')
 const bent = require('bent')
 const { doing } = require('./lib/translate.js')
-const { afk } = require('./fuction')
+const { afk, register, reminder, premium, limit} = require('./fuction')
 const {rank, meme, msgFilter, translate, ngtts, killo } = require('./lib')
 const { uploadImages } = require('./lib/fether')
 const feature = require('./lib/poll')
@@ -58,6 +58,10 @@ const atbk = JSON.parse(fs.readFileSync('./lib/config/anti.json'))
 const faki = JSON.parse(fs.readFileSync('./lib/config/fake.json'))
 const slce = JSON.parse(fs.readFileSync('./lib/config/silence.json'))
 const atstk = JSON.parse(fs.readFileSync('./lib/config/sticker.json'))
+const _premium = JSON.parse(fs.readFileSync('./lib/config/premium.json'))
+let _limit = JSON.parse(fs.readFileSync('./lib/config/limit.json'))
+const _reminder = JSON.parse(fs.readFileSync('./lib/config/reminder.json'))
+const _registered = JSON.parse(fs.readFileSync('./lib/config/registered.json'))
 
 module.exports = kconfig = async (kill, message) => {
 	
@@ -111,6 +115,8 @@ const { name, formattedTitle } = chat
         global.pollfile = 'poll_Config_'+chat.id+'.json'
 		global.voterslistfile = 'poll_voters_Config_'+chat.id+'.json'
 		const { ind } = require('./fuction/index')
+		const isPremium = premium.checkPremiumUser(sender.id, _premium)
+		const isRegistered = register.checkRegisteredUser(sender.id, _registered)
 	
 	
 		       // AFK by Slavyan
@@ -141,6 +147,7 @@ const double = Math.floor(Math.random() * 2) + 1
 		const errorurl = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 		const errorurl2 = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 		const errorImg = 'https://i.ibb.co/jRCpLfn/user.png'
+		const limitCount = 25
 		
 		
         const mess = {
@@ -228,7 +235,7 @@ const double = Math.floor(Math.random() * 2) + 1
 		
 		
 		        // Sistema do XP - Agradecimentos Bocchi - Slavyan
-        if (isGroupMsg && isxp && !rank.isWin(usuario) && !isBlocked) {
+        if (isGroupMsg && isxp && isRegistered && !rank.isWin(usuario) && !isBlocked) {
             try {
                 rank.wait(usuario)
                 const levelAtual = rank.getLevel(usuario, nivel)
@@ -399,6 +406,29 @@ const double = Math.floor(Math.random() * 2) + 1
 
         switch(command) {
 
+			case 'premiumcheck':
+				case 'cekpremium':
+					if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
+					if (!isPremium) return await kill.reply(from, ind.notPremium(), id)
+					const cekExp = ms(premium.getPremiumExpired(sender.id, _premium) - Date.now())
+					await kill.reply(from, `*「 PREMIUM EXPIRE 」*\n\n➸ *ID*: ${sender.id}\n➸ *Premium left*: ${cekExp.days} day(s) ${cekExp.hours} hour(s) ${cekExp.minutes} minute(s)`, id)
+				break
+				case 'premiumlist':
+				case 'listpremium':
+					if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
+					if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+					limit.addLimit(sender.id, _limit, isPremium, isOwner)
+					let listPremi = '「 *PREMIUM USER LIST* 」\n\n'
+					const deret = premium.getAllPremiumUser(_premium)
+					const arrayPremi = []
+					for (let i = 0; i < deret.length; i++) {
+						const checkExp = ms(premium.getPremiumExpired(deret[i], _premium) - Date.now())
+						arrayPremi.push(await kill.getContact(premium.getAllPremiumUser(_premium)[i]))
+						listPremi += `${i + 1}. wa.me/${premium.getAllPremiumUser(_premium)[i].replace('@c.us', '')}\n➸ *Name*: ${arrayPremi[i].pushname}\n➸ *Expired*: ${checkExp.days} day(s) ${checkExp.hours} hour(s) ${checkExp.minutes} minute(s)\n\n`
+					}
+					await kill.reply(from, listPremi, id)
+				break
+
         case 'uptime': //Fix By Poker
                     const formater = (seconds) => {
                     const pad = (s) => {
@@ -420,6 +450,8 @@ const double = Math.floor(Math.random() * 2) + 1
         case 'stiker':
 	case 's':
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
 		if (isMedia && isImage) {
                 const mediaData = await decryptMedia(message, uaOverride)
 				sharp(mediaData)

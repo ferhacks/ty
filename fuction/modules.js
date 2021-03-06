@@ -15,3 +15,17 @@ exports.afkMentioned = (getReason, getTime) => {
 exports.afkDone = (pushname) => {
     return `*${pushname}* Ya no esta Afk`
 }
+exports.notRegistered = () => {
+    return `Uh.. Parece que no estas registrado, Usa \n*${prefix}register* mombre | edad!!`
+}
+
+exports.registered = (name, age, userId, time, serial) => {
+    return `*「 REGISTRACION 」*\n\nTe acabas de registrar correctamente:\n\n➸ *Nombre*: ${name}\n➸ *Edad*: ${age}\n➸ *ID*: ${userId}\n➸ *En el*: ${time}\n➸ *Serial*: ${serial}\n\nUsa *${prefix}rules* terlebih dahulu ya~`
+}
+
+exports.registeredAlready = () => {
+    return `Ya estas en mi sistema`
+}
+exports.notPremium = () => {
+    return `No eres premium`
+}
