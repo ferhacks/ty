@@ -464,18 +464,18 @@ const double = Math.floor(Math.random() * 2) + 1
 			break
 
 			case 'reminder': // by Slavyan
-			if (!isRegistered) return await bocchi.reply(from, ind.notRegistered(), id)
-			if (!q.includes('|')) return await bocchi.reply(from, ind.wrongFormat(), id)
-			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await bocchi.reply(from, ind.limit(), id)
+			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
+			if (!q.includes('|')) return await kill.reply(from, ind.wrongFormat(), id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
 			limit.addLimit(sender.id, _limit, isPremium, isOwner)
 			const timeRemind = q.substring(0, q.indexOf('|') - 1)
 			const messRemind = q.substring(q.lastIndexOf('|') + 2)
 			const parsedTime = ms(toMs(timeRemind))
 			reminder.addReminder(sender.id, messRemind, timeRemind, _reminder)
-			await bocchi.sendTextWithMentions(from, `*「 RECORDAR 」*\n\nRecordar esta activado :3!\n\n➸ *Para*: ${messRemind}\n➸ *Duracion*: ${parsedTime.hours} Horas ${parsedTime.minutes} Minutos ${parsedTime.seconds} Segundos\n➸ *Para*: @${sender.id.replace('@c.us', '')}`, id)
+			await kill.sendTextWithMentions(from, `*「 RECORDAR 」*\n\nRecordar esta activado :3!\n\n➸ *Para*: ${messRemind}\n➸ *Duracion*: ${parsedTime.hours} Horas ${parsedTime.minutes} Minutos ${parsedTime.seconds} Segundos\n➸ *Para*: @${sender.id.replace('@c.us', '')}`, id)
 			const intervRemind = setInterval(async () => {
 				if (Date.now() >= reminder.getReminderTime(sender.id, _reminder)) {
-					await bocchi.sendTextWithMentions(from, `⏰ *「 RECORDATORIO 」* ⏰\n\nOye, Ven~ @${sender.id.replace('@c.us', '')}, Tu tiempo ha termiando\n\n➸ *Te recuerdo que*: ${reminder.getReminderMsg(sender.id, _reminder)}`)
+					await kill.sendTextWithMentions(from, `⏰ *「 RECORDATORIO 」* ⏰\n\nOye, Ven~ @${sender.id.replace('@c.us', '')}, Tu tiempo ha termiando\n\n➸ *Te recuerdo que*: ${reminder.getReminderMsg(sender.id, _reminder)}`)
 					_reminder.splice(reminder.getReminderPosition(sender.id, _reminder), 1)
 					fs.writeFileSync('./lib/config/reminder.json', JSON.stringify(_reminder))
 					clearInterval(intervRemind)
