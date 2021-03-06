@@ -420,7 +420,44 @@ const double = Math.floor(Math.random() * 2) + 1
 	//[AUTO READ] Auto read message 
 	kill.sendSeen(chatId)
 
+	        // Simple anti virtext, sorted by chat length, by: VideFrelan
+			if (isGroupMsg && !isGroupAdmins && isBotGroupAdmins && !isOwner) {
+				if (chats.length > 5000) {
+					await kill.sendTextWithMentions(from, `Oh valla, Parece que @${sender.id} Pudo haber mandado un Binario de texto, SIMP lo eliminara en este momento`)
+					await kill.removeParticipant(groupId, sender.id)
+					await kill.sendTextWithMentions(from, `Si mi sistema se ha equivocado, Pueden usar /unkick en el mensaje que mando @${sender.id} `)
+				 }
+			 }
+
         switch(command) {
+
+			case 'premium':
+                if (!isOwner) return
+                if (ar[0] === 'add') {
+                    if (mentionedJidList.length !== 0) {
+                        for (let prem of mentionedJidList) {
+                            if (prem === botNumber) return await kill.reply(from, ind.wrongFormat(), id)
+                            premium.addPremiumUser(prem, args[2], _premium)
+                            await kill.reply(from, `*「 PREMIUM ADDED 」*\n\n➸ *ID*: ${prem}\n➸ *Expired*: ${ms(toMs(args[2])).days} day(s) ${ms(toMs(args[2])).hours} hour(s) ${ms(toMs(args[2])).minutes} minute(s)`, id)
+                        }
+                    } else {
+                        premium.addPremiumUser(args[1] + '@c.us', args[2], _premium)
+                        await kill.reply(from, `*「 PREMIUM ADDED 」*\n\n➸ *ID*: ${args[1]}@c.us\n➸ *Expired*: ${ms(toMs(args[2])).days} day(s) ${ms(toMs(args[2])).hours} hour(s) ${ms(toMs(args[2])).minutes} minute(s)`, id)
+                    }
+                } else if (ar[0] === 'del') {
+                    if (mentionedJidList.length !== 0) {
+                        if (mentionedJidList[0] === botNumber) return await kill.reply(from, ind.wrongFormat(), id)
+                        _premium.splice(premium.getPremiumPosition(mentionedJidList[0], _premium), 1)
+                        fs.writeFileSync('./lib/config/premium.json', JSON.stringify(_premium))
+                        await kill.reply(from, ind.doneOwner(), id)
+                    } else {
+                        _premium.splice(premium.getPremiumPosition(args[1] + '@c.us', _premium), 1)
+                        fs.writeFileSync('./lib/config/premium.json', JSON.stringify(_premium))
+                        await kill.reply(from, ind.doneOwner(), id)
+                    }
+                } else {
+                    await kill.reply(from, ind.wrongFormat(), id)
+                }
 
 			case 'premiumcheck':
 				case 'cekpremium':
