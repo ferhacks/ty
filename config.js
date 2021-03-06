@@ -62,6 +62,7 @@ const _premium = JSON.parse(fs.readFileSync('./lib/config/premium.json'))
 let _limit = JSON.parse(fs.readFileSync('./lib/config/limit.json'))
 const _reminder = JSON.parse(fs.readFileSync('./lib/config/reminder.json'))
 const _registered = JSON.parse(fs.readFileSync('./lib/config/registered.json'))
+const _ban = JSON.parse(fs.readFileSync('./lib/config/banned.json'))
 
 module.exports = kconfig = async (kill, message) => {
 	
@@ -101,7 +102,8 @@ const { name, formattedTitle } = chat
         const isCmd = body.startsWith(prefix)
         const url = args.length !== 0 ? args[0] : ''
         const uaOverride = process.env.UserAgent
-        const isBlocked = blockNumber.includes(sender.id)
+		const isBlocked = blockNumber.includes(sender.id)
+		const isBanned = _ban.includes(sender.id)
         const isLeg = exsv.includes(chatId)
         const isxp = xp.includes(chatId)
 		const mute = slce.includes(chatId)
