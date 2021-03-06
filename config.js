@@ -1,6 +1,7 @@
 // MODULOS
 const { decryptMedia } = require('@open-wa/wa-decrypt')
 const fs = require('fs-extra')
+const crypto = require('crypto')
 const axios = require('axios')
 const sharp = require('sharp')
 const welcom = require('discord-canvas')
