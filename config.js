@@ -523,7 +523,6 @@ const double = Math.floor(Math.random() * 2) + 1
 
 		case 'register':
 			if (isRegistered) return await kill.reply(from, ind.registeredAlready(), id)
-			if (isGroupMsg) return await kill.reply(from, ind.pcOnly(), id)
 			if (!q.includes('|')) return await kill.reply(from, ind.wrongFormat(), id)
 			const namaUser = q.substring(0, q.indexOf('|') - 1)
 			const umurUser = q.substring(q.lastIndexOf('|') + 2)
