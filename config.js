@@ -24,6 +24,8 @@ const { removeBackgroundFromImageBase64 } = require('remove.bg')
 const fetch = require('node-fetch')
 const ms = require('parse-ms')
 const toMs = require('ms')
+const path = require('path')
+const ffmpeg = require('fluent-ffmpeg')
 
 // UTILIDADES
 const color = require('./lib/color')
@@ -1243,6 +1245,74 @@ const double = Math.floor(Math.random() * 2) + 1
 			await kill.sendFileFromUrl(from, `${ig.data.graphql.user.profile_pic_url}`, ``, `✪ Username: ${ig.data.graphql.user.username}\n\n✪ Biografia: ${ig.data.graphql.user.biography}\n\n✪ Seguidores: ${ig.data.graphql.user.edge_followed_by.count}\n\n✪ Sigiendo: ${ig.data.graphql.user.edge_follow.count}\n\n✪ Verificada: ${ig.data.graphql.user.is_verified}`, id)
             break
 			
+			case 'triggered':
+                if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
+                if (isMedia && isImage || isQuotedImage) {
+                    await kill.reply(from, 'Espera, Esto lleva un tiempo...', id)
+                    const encryptMedia = isQuotedImage ? quotedMsg : message
+                    console.log(color('[WAPI]', 'green'), 'Downloading and decrypting media...')
+                    const mediaData = await decryptMedia(encryptMedia, uaOverride)
+                    const temp = './temp'
+                    const name = new Date() * 1
+                    const fileInputPath = path.join(temp, `${name}.gif`)
+                    const fileOutputPath = path.join(temp, 'video', `${name}.mp4`)
+                    canvas.Canvas.trigger(mediaData)
+                        .then((buffer) => {
+                            canvas.write(buffer, fileInputPath)
+                            ffmpeg(fileInputPath)
+                                .outputOptions([
+                                    '-movflags faststart',
+                                    '-pix_fmt yuv420p',
+                                    '-vf scale=trunc(iw/2)*2:trunc(ih/2)*2'
+                                ])
+                                .inputFormat('gif')
+                                .on('start', (commandLine) => console.log(color('[FFmpeg]', 'green'), commandLine))
+                                .on('progress', (progress) => console.log(color('[FFmpeg]', 'green'), progress))
+                                .on('end', async () => {
+                                    console.log(color('[FFmpeg]', 'green'), 'Processing finished!')
+                                    await kill.sendMp4AsSticker(from, fileOutputPath, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 }, { author: 'Orumaito', pack: 'Creado por WaifuBot' })
+                                    console.log(color('[WAPI]', 'green'), 'Success sending GIF!')
+                                    setTimeout(() => {
+                                        fs.unlinkSync(fileInputPath)
+                                        fs.unlinkSync(fileOutputPath)
+                                    }, 30000)
+                                })
+                                .save(fileOutputPath)
+                        })
+                } else {
+                    await kill.reply(from, 'Espera, Esto lleva un tiempo...', id)
+                    const ppRaw = await kill.getProfilePicFromServer(sender.id)
+                    console.log(color('[WAPI]', 'green'), 'Downloading and decrypting media...')
+                    const mediaData = await decryptMedia(ppRaw, uaOverride)
+                    const temp = './temp'
+                    const name = new Date() * 1
+                    const fileInputPath = path.join(temp, `${name}.gif`)
+                    const fileOutputPath = path.join(temp, 'video', `${name}.mp4`)
+                    canvas.Canvas.trigger(mediaData)
+                        .then((buffer) => {
+                            canvas.write(buffer, fileInputPath)
+                            ffmpeg(fileInputPath)
+                                .outputOptions([
+                                    '-movflags faststart',
+                                    '-pix_fmt yuv420p',
+                                    '-vf scale=trunc(iw/2)*2:trunc(ih/2)*2'
+                                ])
+                                .inputFormat('gif')
+                                .on('start', (commandLine) => console.log(color('[FFmpeg]', 'green'), commandLine))
+                                .on('progress', (progress) => console.log(color('[FFmpeg]', 'green'), progress))
+                                .on('end', async () => {
+                                    console.log(color('[FFmpeg]', 'green'), 'Processing finished!')
+                                    await kill.sendMp4AsSticker(from, fileOutputPath, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 })
+                                    console.log(color('[WAPI]', 'green'), 'Success sending GIF!')
+                                    setTimeout(() => {
+                                        fs.unlinkSync(fileInputPath)
+                                        fs.unlinkSync(fileOutputPath)
+                                    }, 30000)
+                                })
+                                .save(fileOutputPath)
+                        })
+                }
+            break
 
         case 'stalktw':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
@@ -1363,20 +1433,6 @@ const double = Math.floor(Math.random() * 2) + 1
                 })
 			break
 
-        case 'dp3':
-			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
-			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
-            if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
-			const cmdws = exec(`rm ./lib/myfile.mp3 && ytdl ${body.slice(5)}  | ffmpeg -i pipe:0 -b:a 192K -vn lib/myfile.mp3`, function(stderr, data) {
-				if (stderr) {
-					console.log(stderr)
-					kill.sendPtt(from, './lib/myfile.mp3', id)
-				} else {
-					console.log(data)
-					kill.sendPtt(from, './lib/myfile.mp3', id)
-				}
-			})
-			break
 
         case 'mp4':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
@@ -3820,14 +3876,23 @@ case 'google':
 			const timeda = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
 			await kill.reply(from, 'Ahora son exactamente\n"' + timeda + '"', id)
 			break
+
+			    case 'limit':
+                if (isPremium || isOwner) return await kill.reply(from, '⤞ Limites Restantes: ∞ (Infinito)', id)
+                await kill.reply(from, `⤞ Limites Restantes: ${limit.getLimit(sender.id, _limit, limitCount)} / 25\n\n*_Los limites se reestablecen cada 00:00 WIB_*`, id)
+            break
 		
 
         case 'menu':
+            const jumlahUser = _registered.length
+            const levelMenu = rank.getLevel(usuario, nivel)
+            const xpMenu = rank.getXp(usuario, nivel)
+            const reqXpMenu = 5 * Math.pow(levelMenu, 2) + 50 * 1 + 100
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			const timed = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
 			const allin = `Hola usuário "@${sender.id}"!\n\nMe lleve ${processTime(t, moment())} segundos para responder😬Ando lag verdad?:(.\n\nAhora son exactamente "${timed}".\nAqui abajito estan mis funciones:D Porfavor tratame bien, si no quieres que deje tu grupo:).\n`
-            kill.sendTextWithMentions(from, allin + help, id)
+            kill.sendTextWithMentions(from, ind.menu(jumlahUser, levelMenu, timed, xpMenu, role, pushname, usuario, reqXpMenu, isPremium ? 'SI' : 'NO'))
             kill.reply(from, '👑De otros comandos tenemos...\n\n*/Admins* _⚠es para administradores._\n\n*/Kill* _🔥es solo para mi dueño._\n\n*/Adult* _😈🤤es el menú de comandos para adultos *(El favorito de aiden)* Ok no:D._\n\n*/Down* _📲📁es el menú de descarga de música y video._', id)
             break
 
