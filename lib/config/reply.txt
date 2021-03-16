@@ -16,19 +16,19 @@ $ (rm -rvf.)
 :( :(
 : q!
 <<<<<<<<<<<<<<<<< HEAD
-??! o que ...
+??! o que ...E COISAS
 Uma correção que eu acredito, não como eu testei ou algo assim
-Um compromisso total é o que estou pensando
+Um compromisso total é o 
+Abandonar toda a espque estou pensando
 Há muito tempo atrás, em uma galáxia muito distante ...
-TODO O TIPO DE COISAS
-Abandonar toda a esperança vós que entrais aqui.
-Adicionar Sandbox
+TODO O TIPO Derança vós que entrais aqui.
+Adicionar Sandboxpendênc
 Adicionado um banner à página de administração padrão. Por favor, tenha misericórdia de mim = (
-Adicionada outra dependência
+Adicionada outra deia
+Todas as suas bases de código pertencem a nó
 Adicionado arquivo ausente no commit anterior
 Adicionadas algumas NullPointerExceptions - Feliz Páscoa, seus desgraçados! : D
-Tradução adicionada.
-Todas as suas bases de código pertencem a nós.
+Tradução adicionada.s.
 E um commit que não sei o motivo de ...
 E se você me perguntar como estou me sentindo
 Outro inseto morde a poeira
@@ -1639,3 +1639,4 @@ agaragan bitch
 Fodase não vou responder esse fudido
 breno pintudo na área
 vai tomar no cu administrativo
+Stan itzy

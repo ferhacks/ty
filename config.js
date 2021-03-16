@@ -3,6 +3,8 @@ const { decryptMedia } = require('@open-wa/wa-decrypt')
 const fs = require('fs-extra')
 const crypto = require('crypto')
 const axios = require('axios')
+const os = require('os')
+const speed = require('performance-now')
 const sharp = require('sharp')
 const welcom = require('discord-canvas')
 const math = require('mathjs')
@@ -34,7 +36,7 @@ const { owner, donate, down, help, admins, adult, readme, lang, convh } = requir
 const { stdout } = require('process')
 const bent = require('bent')
 const { doing } = require('./lib/translate.js')
-const { afk, register, reminder, premium, limit} = require('./fuction')
+const { afk, register, reminder, premium, limit, daily, warnss} = require('./fuction')
 const {rank, meme, msgFilter, translate, ngtts, killo } = require('./lib')
 const { uploadImages } = require('./lib/fether')
 const feature = require('./lib/poll')
@@ -54,6 +56,7 @@ aki.start()
 // JSON'S 
 const _afk = JSON.parse(fs.readFileSync('./lib/config/afk.json'))
 const nsfw_ = JSON.parse(fs.readFileSync('./lib/config/NSFW.json'))
+const pvdisable = JSON.parse(fs.readFileSync('./lib/config/unpv.json'))
 const welkom = JSON.parse(fs.readFileSync('./lib/config/welcome.json'))
 const exsv = JSON.parse(fs.readFileSync('./lib/config/exclusive.json'))
 const bklist = JSON.parse(fs.readFileSync('./lib/config/blacklist.json'))
@@ -68,13 +71,16 @@ let _limit = JSON.parse(fs.readFileSync('./lib/config/limit.json'))
 const _reminder = JSON.parse(fs.readFileSync('./lib/config/reminder.json'))
 const _registered = JSON.parse(fs.readFileSync('./lib/config/registered.json'))
 const _ban = JSON.parse(fs.readFileSync('./lib/config/banned.json'))
+const _daily = JSON.parse(fs.readFileSync('./lib/config/daily.json'))
+const _warn = JSON.parse(fs.readFileSync('./lib/config/warn.json'))
+const mods =JSON.parse(fs.readFileSync('./lib/config/mods.json'))
 
 module.exports = kconfig = async (kill, message) => {
 	
 	// Esto hace posible recibir alertas en WhatsApp.
 	const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
 	let { body } = message
-	const ownerNumber = config.owner
+	const ownerNumber = mods
 
         // Prefix
         const prefix = config.prefix
@@ -88,12 +94,13 @@ const { name, formattedTitle } = chat
         const botNumber = await kill.getHostNumber()
         const blockNumber = await kill.getBlockedIds()
         const usuario = sender.id
-		const isOwner = usuario.includes(ownerNumber)
+		const isOwner = mods.includes(usuario)
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await kill.getGroupAdmins(groupId) : ''
         const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
         const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber + '@c.us') : false
 		const isNsfw = isGroupMsg ? nsfw_.includes(chat.id) : false
+		const ispvdisable = pvdisable.includes(chatId)
 		const isAfkOn = afk.checkAfkUser(sender.id, _afk)
         const autoSticker = isGroupMsg ? atstk.includes(groupId) : false
         const chats = (type === 'chat') ? body : ((type === 'image' || type === 'video')) ? caption : ''
@@ -111,7 +118,7 @@ const { name, formattedTitle } = chat
 		const isBanned = _ban.includes(sender.id)
         const isLeg = exsv.includes(chatId)
         const isxp = xp.includes(chatId)
-		const mute = slce.includes(chatId)
+		const mute = slce.includes(sender.id)
 		const pvmte = slce.includes(sender.id)
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
@@ -125,6 +132,8 @@ const { name, formattedTitle } = chat
 		const isPremium = premium.checkPremiumUser(sender.id, _premium)
 		const isRegistered = register.checkRegisteredUser(sender.id, _registered)
 		const ar = args.map((v) => v.toLowerCase())
+		const cron = require('node-cron')
+		const cd = 4.32e+7
 		const createSerial = (size) => {
 			return crypto.randomBytes(size).toString('hex').slice(0, size)
 		}
@@ -158,7 +167,8 @@ const double = Math.floor(Math.random() * 2) + 1
 		const errorurl = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 		const errorurl2 = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 		const errorImg = 'https://i.ibb.co/jRCpLfn/user.png'
-		const limitCount = 25
+		const limitCount = 15
+		const warnCount = 1
 		
 		
         const mess = {
@@ -397,12 +407,20 @@ const double = Math.floor(Math.random() * 2) + 1
 			 return console.log(color('[BAN]', 'red'), color(time, 'yellow'), color(`${command} [${args.length}]`), 'De', color(pushname), 'En el grupo', color(name || formattedTitle))
 			}
 		
-
+        // Ignore banned and blocked users
+        if (isCmd && ispvdisable && !isGroupMsg) {
+			await kill.reply(from, 'Los administradores de SIMP bot han desactivado el uso de comandos por privado', id)
+			return console.log(color('[PVD]', 'red'), color(time, 'yellow'), color(`${command} [${args.length}]`), 'De', color(pushname))
+		}
         // ANTI FLOOD PRIVADO
-        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('FLOOD AS', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'de', color(pushname)) }
+        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg && !isPremium) {
+		await kill.reply (from, ind.antiflood(), id)	
+		return console.log(color('FLOOD AS', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'de', color(pushname)) }
 		
 		// ANTI FLOOD GRUPOS
-        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg) { return console.log(color('FLOOD AS', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'de', color(pushname), 'em', color(name || formattedTitle)) }
+        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg && !isGroupAdmins && !isPremium) {
+		await kill.reply (from, ind.antiflood(), id)		
+		return console.log(color('FLOOD AS', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'de', color(pushname), 'em', color(name || formattedTitle)) }
 		
 		
         // MENSAGEM PV
@@ -424,6 +442,21 @@ const double = Math.floor(Math.random() * 2) + 1
 	
 	//[AUTO READ] Auto read message 
 	kill.sendSeen(chatId)
+
+	        /********** END OF VALIDATOR **********/
+
+        // Automate
+        premium.expiredCheck(_premium)
+        cron.schedule('0 0 * * *', () => {
+            const reset = []
+            _limit = reset
+            console.log('Resetting user limit...')
+            fs.writeFileSync('./lib/config/limit.json', JSON.stringify(_limit))
+            console.log('Success!')
+        }, {
+            scheduled: true,
+            timezone: 'Asia/Jakarta'
+        })
 
 	        // Simple anti virtext, sorted by chat length, by: VideFrelan
 			if (isGroupMsg && !isGroupAdmins && isBotGroupAdmins && !isOwner) {
@@ -508,22 +541,10 @@ const double = Math.floor(Math.random() * 2) + 1
 					await kill.reply(from, listPremi, id)
 				break
 
-        case 'uptime': //Fix By Poker
-                    const formater = (seconds) => {
-                    const pad = (s) => {
-                        return (s < 10 ? '0' : '') + s
-                    }
-                    const hrs = Math.floor(seconds / (60 * 60))
-                    const mins = Math.floor(seconds % (60 * 60) / 60)
-                    const secs = Math.floor(seconds % 60)
-                    return ' ' + pad(hrs) + ':' + pad(mins) + ':' + pad(secs)
-                }
-                const uptime = process.uptime()
-            
-            await kill.reply(from, `Tiempo Activo:\n*_❏ ${formater(uptime)}_*`, id)
-        break
+
 
 		case 'register':
+			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (isRegistered) return await kill.reply(from, ind.registeredAlready(), id)
 			if (!q.includes('|')) return await kill.reply(from, ind.wrongFormat(), id)
 			const namaUser = q.substring(0, q.indexOf('|') - 1)
@@ -555,6 +576,9 @@ const double = Math.floor(Math.random() * 2) + 1
 					let resizedImageData = resizedImageBuffer.toString('base64');
 					let resizedBase64 = `data:${mimetype};base64,${resizedImageData}`;
 					await kill.sendImageAsSticker(from, resizedBase64, {author: 'Aiden, Simp bot', pack: '+55 11 94753-2586' })
+					if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+					limit.addLimit(sender.id, _limit, isPremium, isOwner)
+					if (!isPremium) return await kill.reply(from, 'Y se utilizo 1 limit', id)
 					await kill.reply(from, '*SU STICKER SE CREO CORRECTAMENTE😉', id)
 				})
             } else if (isQuotedImage) {
@@ -569,12 +593,16 @@ const double = Math.floor(Math.random() * 2) + 1
 					let resizedBase64 = `data:${quotedMsg.mimetype};base64,${resizedImageData}`;
 					await kill.sendImageAsSticker(from, resizedBase64, {author: 'Aiden, Simp bot', pack: '+55 11 94753-2586' })
 					await kill.reply(from, '*SU STICKER SE CREO CORRECTAMENTE😉', id)
+					if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+					limit.addLimit(sender.id, _limit, isPremium, isOwner)
+					if (!isPremium) return await kill.reply(from, 'Y se utilizo 1 limit', id)
 
 				})
             } else if (args.length == 1) {
                 const url = args[0]
                 if (isUrl(url)) {
                     await kill.sendStickerfromUrl(from, url, { method: 'get' }, {author: 'Aiden, Simp bot', pack: '+55 11 94753-2586' })
+					if (!isPremium) return await kill.reply(from, 'Se utilizo 1 limit', id)
                         .catch(err => console.log('Erro: ', err))
                 } else {
 					kill.reply(from, mess.error.Iv, id)
@@ -681,7 +709,7 @@ const double = Math.floor(Math.random() * 2) + 1
                     const encryptMedia = isQuotedGif || isQuotedVideo ? quotedMsg : message
                     const mediaData = await decryptMedia(encryptMedia, uaOverride)
                     const gifSticker = `data:${mimetype};base64,${mediaData.toString('base64')}`
-                    await kill.sendMp4AsSticker(from, gifSticker, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 })
+                    await kill.sendMp4AsSticker(from, gifSticker, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 }, {author: 'Aiden, Simp bot', pack: '+55 11 94753-2586' })
 		    await kill.reply(from, '*SU STICKER SE CREO CORRECTAMENTE😉', id)
                 } catch (err) {
                     console.error(err)
@@ -1239,14 +1267,17 @@ const double = Math.floor(Math.random() * 2) + 1
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado.')
             if (args.length == 0) return kill.reply(from, 'Establecer un nombre de perfil para la búsqueda.', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             const ig = await axios.get(`https://docs-jojo.herokuapp.com/api/stalk?username=${body.slice(9)}`)
 			const stkig = JSON.stringify(ig.data)
 			if (stkig == '{}') return kill.reply(from, 'Usuario no localizado.', id)
 			await kill.sendFileFromUrl(from, `${ig.data.graphql.user.profile_pic_url}`, ``, `✪ Username: ${ig.data.graphql.user.username}\n\n✪ Biografia: ${ig.data.graphql.user.biography}\n\n✪ Seguidores: ${ig.data.graphql.user.edge_followed_by.count}\n\n✪ Sigiendo: ${ig.data.graphql.user.edge_follow.count}\n\n✪ Verificada: ${ig.data.graphql.user.is_verified}`, id)
-            break
+            limit.addLimit(sender.id, _limit, isPremium, isOwner)
+			break
 			
 			case 'triggered':
                 if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
+				if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
                 if (isMedia && isImage || isQuotedImage) {
                     await kill.reply(from, 'Espera, Esto lleva un tiempo...', id)
                     const encryptMedia = isQuotedImage ? quotedMsg : message
@@ -1270,8 +1301,11 @@ const double = Math.floor(Math.random() * 2) + 1
                                 .on('progress', (progress) => console.log(color('[FFmpeg]', 'green'), progress))
                                 .on('end', async () => {
                                     console.log(color('[FFmpeg]', 'green'), 'Processing finished!')
-                                    await kill.sendMp4AsSticker(from, fileOutputPath, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 }, { author: 'Orumaito', pack: 'Creado por WaifuBot' })
+                                    await kill.sendMp4AsSticker(from, fileOutputPath, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 }, {author: 'Aiden, Simp bot', pack: '+55 11 94753-2586' })
                                     console.log(color('[WAPI]', 'green'), 'Success sending GIF!')
+									if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+									limit.addLimit(sender.id, _limit, isPremium, isOwner)
+									if (!isPremium) await kill.reply(from, 'Se utilizo 1 limit', id)
                                     setTimeout(() => {
                                         fs.unlinkSync(fileInputPath)
                                         fs.unlinkSync(fileOutputPath)
@@ -1304,6 +1338,8 @@ const double = Math.floor(Math.random() * 2) + 1
                                     console.log(color('[FFmpeg]', 'green'), 'Processing finished!')
                                     await kill.sendMp4AsSticker(from, fileOutputPath, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 })
                                     console.log(color('[WAPI]', 'green'), 'Success sending GIF!')
+									limit.addLimit(sender.id, _limit, isPremium, isOwner)
+									if (!isPremium) await kill.reply(from, 'Se utilizo 1 limit', id)
                                     setTimeout(() => {
                                         fs.unlinkSync(fileInputPath)
                                         fs.unlinkSync(fileOutputPath)
@@ -1318,18 +1354,22 @@ const double = Math.floor(Math.random() * 2) + 1
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Y el username?', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             const tw = await axios.get(`http://arugaz.my.id/api/media/stalktwitt?user=${body.slice(9)}`)
 			var insta = tw.data.result.biography
             await kill.sendFileFromUrl(from, `${tw.data.result.profile_picture}`, ``, `Username: ${tw.data.result.username}\n\nNombre: ${tw.data.result.fullname}\n\nbio: ${insta}\n\nSeguidores: ${tw.data.result.followers}\n\nSigiendo: ${tw.data.followings}`, id)
-            break
+            limit.addLimit(sender.id, _limit, isPremium, isOwner)
+			break
 			
 
         case 'twitter':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Y el link?', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             const twi = await axios.get(`http://arugaz.my.id/api/media/twvid?url=${body.slice(4)}`)
 			await kill.sendFileFromUrl(from, twi.data.result.videos, ``, 'Es un gran video jaja! \n ~Pero ¿qué diablos fue eso?...~', id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
 			.catch(() => {
 						kill.reply(from, '¡Esa no! Impidieron mi acceso!\nChaaa!', id)
 					})
@@ -1338,10 +1378,12 @@ const double = Math.floor(Math.random() * 2) + 1
 
         case 'ig':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Y el link?', id)
             const iga = await axios.get(`https://arugaz.my.id/api/media/ig?url=${body.slice(4)}`)
 			await kill.sendFileFromUrl(from, iga.data.result, ``, 'Es un gran video jaja! \n ~Pero ¿qué diablos fue eso?...~', id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
 			.catch(() => {
 						kill.reply(from, 'Esa no! Impidieron mi acceso!\nChaaa!', id)
 					})
@@ -1364,6 +1406,8 @@ const double = Math.floor(Math.random() * 2) + 1
 		case 'sporn':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             try {
 				if (isGroupMsg) {
 					if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -1386,6 +1430,8 @@ const double = Math.floor(Math.random() * 2) + 1
 		case 'xvideos':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             try {
 				if (isGroupMsg) {
 					if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -1409,9 +1455,11 @@ const double = Math.floor(Math.random() * 2) + 1
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			if (args.length == 0) return kill.reply(from, 'Olvidaste insertar un enlace de facebook?', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             const fb = await axios.get(`https://mnazria.herokuapp.com/api/fbdownloadervideo?url=${body.slice(4)}`)
 			const fbdw = fb.data.resultSD
             await kill.sendFileFromUrl(from, fbdw, 'video.mp4', 'Excelente video!...~', id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
 			.catch((error) => {
 				kill.reply(from, 'Dios mío, algún tipo de fuerza maligna me impidió terminar el comando!', id)
 			})
@@ -1422,6 +1470,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             axios.get(`http://st4rz.herokuapp.com/api/yta2?url=${body.slice(5)}`)
             .then(async(rest) => {
 					var m3pa = rest.data.result
@@ -1430,6 +1479,7 @@ const double = Math.floor(Math.random() * 2) + 1
 					var m3fo = rest.data.ext
 					await kill.sendFileFromUrl(from, m3tu, '', `😋Titulo: ${m3ti}\n✅Formato:${m3fo}\n\nEspero haberlo hecho bien y ... ¡ahora solo espera! Pero evita usar de nuevo hasta que termine emm!`, id)
 					await kill.sendFileFromUrl(from, m3pa, '', '', id)
+					limit.addLimit(sender.id, _limit, isPremium, isOwner)
                 })
 			break
 
@@ -1438,6 +1488,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             axios.get(`http://st4rz.herokuapp.com/api/ytv2?url=${body.slice(5)}`)
             .then(async(rest) => {
 					var mp4 = rest.data.result
@@ -1446,6 +1497,7 @@ const double = Math.floor(Math.random() * 2) + 1
 					var m4fo = rest.data.ext
 					await kill.sendFileFromUrl(from, m4tu, '', `😋Titulo: ${tmp4}\n✅Formato:${m4fo}\n\nEspero haberlo hecho bien y ... ¡ahora solo espera! Pero evita usar de nuevo hasta que termine emm!`, id)
 					await kill.sendFileFromUrl(from, mp4, `video.mp4`, tmp4, id)
+					limit.addLimit(sender.id, _limit, isPremium, isOwner)
                 })
 			break
 			
@@ -1454,6 +1506,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado.')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             axios.get(`https://docs-jojo.herokuapp.com/api/yt-search?q=${body.slice(6)}`)
             .then(async (res) => {
 				const pyre = res.data.result.result[0].publishedTime
@@ -1484,6 +1537,7 @@ const double = Math.floor(Math.random() * 2) + 1
 						var m3pa = rest.data.result
 						var m3ti = rest.data.title
 						await kill.sendFileFromUrl(from, m3pa, '', '', id)
+						limit.addLimit(sender.id, _limit, isPremium, isOwner)
 					})
 				}
 			})
@@ -1494,6 +1548,7 @@ const double = Math.floor(Math.random() * 2) + 1
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Comando ignorado.')
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
             axios.get(`https://docs-jojo.herokuapp.com/api/yt-search?q=${body.slice(6)}`)
             .then(async (res) => {
 				const vyre = res.data.result.result[0].publishedTime
@@ -1523,6 +1578,7 @@ const double = Math.floor(Math.random() * 2) + 1
 					axios.get(`http://st4rz.herokuapp.com/api/ytv2?url=https://youtu.be/${res.data.result.result[0].id}`)
 					.then(async(rest) => {
 						await kill.sendFileFromUrl(from, `${rest.data.result}`, ``, ``, id)
+						limit.addLimit(sender.id, _limit, isPremium, isOwner)
 					})
 				}
 			})
@@ -1582,7 +1638,6 @@ const double = Math.floor(Math.random() * 2) + 1
        case 'translate':
 		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
-            if (args.length != 1) return kill.reply(from, `Esto es demasiado pequeño para traducirlo...`, id)
             if (!quotedMsg) return kill.reply(from, `Olvidaste marcar el mensaje para traducir.`, id)
             const quoteText = quotedMsg.type == 'chat' ? quotedMsg.body : quotedMsg.type == 'image' ? quotedMsg.caption : ''
 			kill.reply(from, mess.wait, id)
@@ -1714,7 +1769,7 @@ case 'tts':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
 			try {
-				const iris = await axios.get(`http://simsumi.herokuapp.com/api?text=${body.slice(6)}&lang=es`)
+				const simp = await axios.get(`http://simsumi.herokuapp.com/api?text=${body.slice(6)}&lang=es`)
 				if (simp.data.success == '') {
 					console.log('Solicitud fallida, usando respuestas locales...')
 					let rndrl = fs.readFileSync('./lib/config/reply.txt').toString().split('\n')
@@ -1750,8 +1805,23 @@ case 'tts':
         case 'ping':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
-            kill.sendText(from, `Pong xd!\n_Mi velocidad es de ${processTime(t, moment())} segundos._`)
-            break
+			const formater = (seconds) => {
+				const pad = (s) => {
+					return (s < 10 ? '0' : '') + s
+				}
+				const hrs = Math.floor(seconds / (60 * 60))
+				const mins = Math.floor(seconds % (60 * 60) / 60)
+				const secs = Math.floor(seconds % 60)
+				return ' ' + pad(hrs) + ':' + pad(mins) + ':' + pad(secs)
+			}
+			const uptime = process.uptime()
+				const timestamp = speed();
+				const latensi = speed() - timestamp
+				const charged = await kill.getIsPlugged();
+				const device = await kill.getMe() 
+				const deviceinfo = `- Bateria del host : ${device.battery}%\n  ├ ¿Esta cargando? : ${charged}\n  └ ¿24 Horas vivo? : ${device.is24h}\n  ├ ¿Android? : ${device.phone.os_version}\n  └ Build Number : Oculto \n\n _*Hora del servidor :*_ ${moment(t * 1000).format('HH:mm:ss')}`
+				kill.reply(from, `*Dispositivo del host*\n${deviceinfo}\n\nCuanta ram estoy usando: *${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB*\nCPU: *${os.cpus().length}*\n\nInformacion :\n\n Tiempo Activo:\n*_❏ ${formater(uptime)}_* \n\n\nVelocidad de internet: ${latensi.toFixed(4)} _Second_ \n\nVelocidad del bot: ${processTime(t, moment())} Segundos`, id)
+				break
 
 
         case 'donate':
@@ -1825,6 +1895,22 @@ case 'tts':
 				kill.reply(from, mess.error.Gp, id)
 			}
             break
+
+			case 'onlygps':
+				if (args.length !== 1) return kill.reply(from, 'Defina enable o disable', id)
+				if (isOwner) {
+						if (args.length !== 1) return kill.reply(from, 'Olvidaste establecer entre activado [on], ou descativado [off].', id)
+						if (args[0] == 'on') {
+							pvdisable.push(chat.id)
+							fs.writeFileSync('./lib/config/unpv.json', JSON.stringify(pvdisable))
+							kill.reply(from, 'Este grupo ya no podrá usar los comandos.', id)
+						} else if (args[0] == 'off') {
+							let pvnt = pvdisable.indexOf(chatId)
+							pvdisable.splice(pvnt, 1)
+							fs.writeFileSync('./lib/config/unpv.json', JSON.stringify(pvdisable))
+							kill.reply(from, 'Este grupo puede usar los comandos nuevamente.', id)
+						}}
+				break
 
 
         case 'welcome':
@@ -2061,6 +2147,8 @@ case 'google':
         case 'nh':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (args.length == 1) {
@@ -2555,6 +2643,8 @@ case 'google':
         case 'porn':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             const porn = await axios.get('https://meme-api.herokuapp.com/gimme/porn')
@@ -2569,6 +2659,8 @@ case 'google':
         case 'lesbian':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             const lesb = await axios.get('https://meme-api.herokuapp.com/gimme/lesbians')
@@ -2584,6 +2676,8 @@ case 'google':
         case 'pgay':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             const gay = await axios.get('https://meme-api.herokuapp.com/gimme/gayporn')
@@ -2613,7 +2707,7 @@ case 'google':
                 const fison = arkp.split('|')[0]
                 const twoso = arkp.split('|')[1]
                 if (fison > 10 || twoso > 10) return kill.reply(from, 'Desculpe, maximo de 10 letras.', id)
-                await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/phblogo?text1=${fison}&text2=${twoso}`, '', '', id)
+                await kill.sendFileFromUrl(from, `https://docs-jojo.herokuappss.com/api/phblogo?text1=${fison}&text2=${twoso}`, '', '', id)
             } else {
                 await kill.reply(from, `Para usar esto, agregue dos oraciones, separándolas por |.`, id)
             }
@@ -2669,13 +2763,15 @@ case 'google':
 				if (quotedMsg) {
 					const negquo = quotedMsgObj.sender.id
 					await kill.sendTextWithMentions(from, `Expulsando participante @${negquo} del grupo...`)
-					await kill.removeParticipant(groupId, negquo)
-				} else {
+					for (let k = 0; k < negquo.length; k++) {
+						await kill.removeParticipant(groupId, negquo)
+				}
+			} else {
 					if (mentionedJidList.length == 0) return kill.reply(from, 'Escribiste el comando muy mal, arréglalo y envíalo bien.', id)
 					await kill.sendTextWithMentions(from, `Expulsando participante ${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')} del grupo...`)
 					for (let i = 0; i < mentionedJidList.length; i++) {
 						if (ownerNumber.includes(mentionedJidList[i])) return kill.reply(from, 'Desafortunadamente es un miembro VIP, no puedo expulsarlo.', id)
-						if (groupAdmins.includes(mentionedJidList[i])) return kill.reply(from, mess.error.Kl, id)
+						if (groupAdmins.includes(mentionedJidList[i])) return kill.reply(from, mess.error.Ki, id)
 						await kill.removeParticipant(groupId, mentionedJidList[i])
 					}
 				}
@@ -2795,6 +2891,7 @@ case 'google':
 
         case 'join':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
+			if (!isPremium) return
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (args.length == 0) return kill.reply(from, 'No lo sé, hay algo mal en eso!', id)
             const gplk = body.slice(6)
@@ -2803,7 +2900,7 @@ case 'google':
             const isLink = gplk.match(/(https:\/\/chat.whatsapp.com)/gi)
             const check = await kill.inviteInfo(gplk)
             if (!isLink) return kill.reply(from, 'Link errado', id)
-            if (tGr.length > 6) return kill.reply(from, 'Ya estoy en el máximo de grupos, lo siento.', id)
+            if (tGr.length > 90) return kill.reply(from, 'Ya estoy en el máximo de grupos, lo siento.', id)
             if (check.size < minMem) return kill.reply(from, 'Solo puedo trabajar en grupos de más de 30 personas.', id)
             if (check.status == 200) {
                 await kill.joinGroupViaLink(gplk).then(() => kill.reply(from, 'Uniéndose al grupo...'))
@@ -2996,6 +3093,8 @@ case 'google':
         case 'iecchi':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (triple == 1) {
@@ -3026,6 +3125,8 @@ case 'google':
         case 'tits':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 			if (octo == 1) {
@@ -3086,14 +3187,16 @@ case 'google':
 			case 'fuck':
 				if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 				if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+				if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+				limit.addLimit(sender.id, _limit, isPremium, isOwner)
 				fucks = body.trim().split(' ')
 				if (args.length == 1) {
 				const violador = author.replace('@c.us', '')
 				if (isGroupMsg) {
 					if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 						const chfuck = await axios.get('https://nekos.life/api/v2/img/anal')
-						await kill.sendVideoAsGif(from, chfuck.data.url, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 })
-						await sleep(5000)
+						await kill.sendFileFromUrl(from, chfuck.data.url, { fps: 30, startTime: '00:00:00.0', endTime : '00:00:05.0', loop: 0 })
+						await sleep(1000)
 						await kill.sendTextWithMentions(from, '@' + violador + ' Esta follando con ' + fucks[1] + ' u///u')
 					}
 				} else {
@@ -3104,14 +3207,17 @@ case 'google':
 		case 'cum':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
 			fucks2 = body.trim().split(' ')
 			if (args.length == 1) {
 			const violador2 = author.replace('@c.us', '')
 			if (isGroupMsg) {
 				if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
-					const chfuck2 = await axios.get('https://nekos.life/api/v2/img/cum')
-					kill.sendVideoAsGif(from, chfuck2.data.url, id)
-					await sleep(5000)
+				let rndrl = fs.readFileSync('./lib/config/cum.txt').toString().split('\n')
+				let chfuck2 = rndrl[Math.floor(Math.random() * rndrl.length)]
+					kill.sendMp4AsSticker(from, chfuck2, id)
+					await sleep(2000)
 					await kill.sendTextWithMentions(from, '@' + violador2 + ' Se ha venido en ' + fucks2[1] + ' >///<')
 				}
 			} else {
@@ -3121,6 +3227,8 @@ case 'google':
 	    case 'milf':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             	if (triple == 1) {
@@ -3157,6 +3265,8 @@ case 'google':
         case 'bdsm':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             	if (triple == 1) {
@@ -3193,6 +3303,8 @@ case 'google':
         case 'ass':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             	if (triple == 1) {
@@ -3229,6 +3341,8 @@ case 'google':
         case 'pussy':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             	if (triple == 1) {
@@ -3266,6 +3380,8 @@ case 'google':
         case 'boquete':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (double == 1) {
@@ -3285,6 +3401,8 @@ case 'google':
         case 'feet':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (double == 1) {
@@ -3309,6 +3427,8 @@ case 'google':
         case 'hard':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				const hard = await axios.get('https://nekos.life/api/v2/img/spank')
@@ -3323,6 +3443,8 @@ case 'google':
         case 'boobs':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (double == 1) {
@@ -3347,6 +3469,8 @@ case 'google':
         case 'lick':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (double == 1) {
@@ -3371,6 +3495,8 @@ case 'google':
         case 'femdom':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (triple == 1) {
@@ -3401,6 +3527,8 @@ case 'google':
         case 'futanari':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				const futanari = await axios.get('https://nekos.life/api/v2/img/futanari')
@@ -3415,6 +3543,8 @@ case 'google':
         case 'masturb':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (triple == 1) {
@@ -3445,6 +3575,8 @@ case 'google':
         case 'anal':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
 				if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (double == 1) {
@@ -3469,6 +3601,8 @@ case 'google':
 		case 'randomloli':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
 				if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				const loliz = await axios.get('https://nekos.life/api/v2/img/keta')
@@ -3483,6 +3617,8 @@ case 'google':
         case 'nsfwicon':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
 				if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				const icon = await axios.get('https://nekos.life/api/v2/img/nsfw_avatar')
@@ -3522,6 +3658,8 @@ case 'google':
 		case 'pies':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				const pezin = await axios.get('https://nekos.life/api/v2/img/feet')
@@ -3564,6 +3702,8 @@ case 'google':
         case 'ihentai':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
 		    const selnum = Math.floor(Math.random() * 6) + 1 
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
@@ -3622,6 +3762,8 @@ case 'google':
         case 'randomneko':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
 				if (seven == 1) {
@@ -3676,6 +3818,8 @@ case 'google':
         case 'trap':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (limit.isLimit(sender.id, _limit, limitCount, isPremium, isOwner)) return await kill.reply(from, ind.limit(), id)
+			limit.addLimit(sender.id, _limit, isPremium, isOwner)
             if (isGroupMsg) {
                 if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
             if (double == 1) {
@@ -3840,7 +3984,7 @@ case 'google':
 				const persona = author.replace('@c.us', '')
 				kill.sendTextWithMentions(from, 'OMG😱! @' + persona + ' se beso con ' + arqa[1] + ' !')
 				if (double == 1) {
-				await kill.sendGiphyAsSticker(from, 'https://media.giphy.com/media/vUrwEOLtBUnJe/giphy.gif')
+				await kill.sendMp4AsSticker(from, './ezgif-3-24533caeebff.mp4')
 				} else {
 				await kill.sendGiphyAsSticker(from, 'https://media.giphy.com/media/1wmtU5YhqqDKg/giphy.gif')
 				}
@@ -3859,6 +4003,33 @@ case 'google':
             kill.sendTextWithMentions(from, '@' + person + ' *Golpeo a* ' + arq[1])
             break
 
+		case 'warn' :
+		if (isGroupMsg && isGroupAdmins || isGroupMsg && isOwner) {
+			if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
+			if (quotedMsg) {
+				const war = quotedMsgObj.sender.id
+				const warss = warnss.getwarns(war, _warn, warnCount)
+				if (Number(warss) >= 5) {
+					kill.sendTextWithMentions(from, `@${war} ha alcanzado los limites, La sancion es: Expulsar`) 
+					await kill.removeParticipant(groupId, war)
+					warnss.resetwarn(war, _warn)
+				} else {
+				warnss.addwarn(war, _warn)
+				kill.sendTextWithMentions(from, `@${war} Ha sido advertido \n\n${warss}/5\n\n Si tus advertencias llegan a 5 Seras sancionado`)
+				}
+				
+			}} else if (ar[0] === 'pay') {
+			const checkk = rank.getXp(sender.id, nivel)
+			const warss = warnss.getwarns(usuario, _warn, warnCount)
+			if (Number(warss) <= 1) return await kill.reply(from, 'No tienes advertencias', id)
+			if (Number(checkk) <= 450 ) return await kill.reply(from, 'Nesecitas 450 XP', id)
+			warnss.multa(usuario, _warn)
+			rank.delXp(sender.id, Number(450), nivel)
+			kill.reply(from, '-450 XP, Se te quito una advertencia', id)
+			}
+			
+
+		break
 
         case 'getmeme':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
@@ -3878,21 +4049,42 @@ case 'google':
 			break
 
 			    case 'limit':
+				const equs = '300'
+				if (ar[0] === 'shop') {
+					if (isPremium || isOwner) return await kill.reply(from, '⤞ No se pudo completar la transaccion, Eres premium', id)
+					const checkk = rank.getXp(sender.id, nivel)
+					if (Number(checkk) <= 300 ) return await kill.reply(from, 'Nesecitas ~500~ 300 XP', id)
+					limit.shopLimit(sender.id, _limit)
+					rank.delXp(sender.id, Number(equs), nivel)
+					await kill.reply(from, '1 Limite comprado, -300 XP', id)
+				} else {
                 if (isPremium || isOwner) return await kill.reply(from, '⤞ Limites Restantes: ∞ (Infinito)', id)
-                await kill.reply(from, `⤞ Limites Restantes: ${limit.getLimit(sender.id, _limit, limitCount)} / 25\n\n*_Los limites se reestablecen cada 00:00 WIB_*`, id)
+                await kill.reply(from, `⤞ Limites Restantes: ${limit.getLimit(sender.id, _limit, limitCount)} / 25\n\n*_Los limites se reestablecen cada 00:00 WIB_*\n\n_*Para comprar limites usa /limit shop, Pero ojo, un limite cuesta 500 xp*`, id)
+				}
             break
 		
 
         case 'menu':
+			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
+			if (!isRegistered) return await kill.reply(from, ind.unmenu(usuario, isRegistered ? '✔' : '✘'), id)
+			const formaterm = (seconds) => {
+				const pad = (s) => {
+					return (s < 10 ? '0' : '') + s
+				}
+				const hrs = Math.floor(seconds / (60 * 60))
+				const mins = Math.floor(seconds % (60 * 60) / 60)
+				const secs = Math.floor(seconds % 60)
+				return ' ' + pad(hrs) + ' Horas, ' + pad(mins) + ' Minutos, ' + pad(secs) + ' Segundos'
+			}
+			const uptimem = process.uptime()
             const jumlahUser = _registered.length
             const levelMenu = rank.getLevel(usuario, nivel)
             const xpMenu = rank.getXp(usuario, nivel)
             const reqXpMenu = 5 * Math.pow(levelMenu, 2) + 50 * 1 + 100
-			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
-			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
-			const timed = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
-			const allin = `Hola usuário "@${sender.id}"!\n\nMe lleve ${processTime(t, moment())} segundos para responder😬Ando lag verdad?:(.\n\nAhora son exactamente "${timed}".\nAqui abajito estan mis funciones:D Porfavor tratame bien, si no quieres que deje tu grupo:).\n`
-            kill.sendTextWithMentions(from, ind.menu(jumlahUser, levelMenu, timed, xpMenu, role, pushname, usuario, reqXpMenu, isPremium ? 'SI' : 'NO'))
+			const timed = moment(t * 1000).format('DD/MM/YY')
+			const timedae = moment(t * 1000).format('HH:mm:ss')
+			const allin = `Hola usuário "@${sender.id}"!\n\nMe lleve ${processTime(t, moment())} segundos para responder😬Ando lag verdad?:(.\n\nAhora son exactamente "${timed}".\nAqui abajito estan mis funciones y info de ti :D Porfavor tratame bien, si no quieres que deje tu grupo:).\n\n======================\n\n➸ *Nombre*: ${pushname}\n\n `
+            kill.sendTextWithMentions(from, ind.menu(jumlahUser, processTime, t, moment, usuario, limit, _limit, limitCount, timed, timedae, levelMenu, xpMenu, role, formaterm, uptimem, pushname, reqXpMenu, isPremium ? '✔' : '✘', isRegistered ? '✔' : '✘'))
             kill.reply(from, '👑De otros comandos tenemos...\n\n*/Admins* _⚠es para administradores._\n\n*/Kill* _🔥es solo para mi dueño._\n\n*/Adult* _😈🤤es el menú de comandos para adultos *(El favorito de aiden)* Ok no:D._\n\n*/Down* _📲📁es el menú de descarga de música y video._', id)
             break
 
@@ -3916,8 +4108,12 @@ case 'google':
         case 'kill':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
-            if (!isOwner) return kill.reply(from, mess.error.Kl, id)
-            kill.sendText(from, owner, id)
+            if (isOwner) return kill.sendText(from, owner, id)
+			if (!isBotGroupAdmins) return kill.reply(from, 'psstt.. dame admin', id)
+			kill.reply(from, `Esto le va a doler mas a ti que a mi... ( ⇀‸↼‶ )`, id).then(() => {
+			sleep(1000)
+			kill.removeParticipant(groupId, sender.id)
+			})  
             break
 
 
@@ -3933,8 +4129,7 @@ case 'google':
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             kill.reply(from, readme, id)
             break
-			
-		
+	
 		case 'bomb':
 			if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
@@ -4224,6 +4419,17 @@ case 'google':
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isxp) return await kill.reply(from, 'Para usar esto, active el sistema XP.', id)
             if (!isGroupMsg) return await kill.reply(from, mess.error.Gp, id)
+			if (ar[0] === '-d') {
+				if (!isOwner) return kill.reply(from, 'Solo mi creador tiene acceso a este comando.', id)
+				if (mentionedJidList.length !== 0) {
+					for (let prema of mentionedJidList) {
+						if (prema === botNumber) return await kill.reply(from, ind.wrongFormat(), id)
+				const donatees = rank.getXp(sender.id, nivel)
+				if (Number(donatees) <= args[2]) return await kill.reply(from, 'No tienes esa cantidad', id)
+				rank.delXp(prema, args[2], nivel)
+				rank.addXp(prema, args[2], nivel)
+				await kill.reply(from, 'XP Donado correctamente...', id)
+			}}} else {
             const userLevel = rank.getLevel(usuario, nivel)
             const userXp = rank.getXp(usuario, nivel)
             const ppLink = await kill.getProfilePicFromServer(usuario)
@@ -4254,13 +4460,18 @@ case 'google':
                 .catch(async (err) => {
                     console.error(err)
                     await kill.reply(from, 'Error al crear la imagen de clasificación.', id)
-                })
+                })}
             break
 			
 	case 'players':
 		if (!isRegistered) return await kill.reply(from, ind.notRegistered(), id)
 			if (mute || pvmte) return console.log('Ignorando comando [Silence]')
             if (!isGroupMsg) return kill.reply(from. mess.error.Gp, id)
+			const lastReport = daily.getLimit(sender.id, _daily)
+			if (lastReport !== undefined && cd - (Date.now() - lastReport) > 0) {
+				const time = ms(cd - (Date.now() - lastReport))
+				await kill.reply(from, ind.daily(time), id)
+			} else {
             const cklvl = nivel
             nivel.sort((a, b) => (a.xp < b.xp) ? 1 : -1)
             let board = '-----[ *RANKS* ]----\n\n'
@@ -4320,6 +4531,8 @@ case 'google':
                 console.error(err)
                 await kill.reply(from, 'Puts, ni siquiera tenemos 10 "jugadores" todavía, inténtelo de nuevo cuando tengamos!', id)
             }
+			daily.addLimit(sender.id, _daily)
+		}
             break
 			
 	default:
@@ -4333,6 +4546,16 @@ case 'google':
    } catch (err) {
         console.log(color('[ERRO]', 'red'), err)
 			//.xd
-		kill.reply(from, `⚠️ _Vaya, por alguna razón recibí errores con este comando, por favor evite usarlo nuevamente y si es posible contacte a los responsables con el comando ${prefix}help._`, id)
+		const { ind } = require('./fuction/index')
+		let { pushname, verifiedName, formattedName } = sender
+		pushname = pushname || verifiedName || formattedName
+		let { body } = message
+		const geterr = body.slice(0)
+		const chats = (type === 'chat') ? body : ((type === 'image' || type === 'video')) ? caption : ''
+        body = (type === 'chat' && body.startsWith(prefix)) ? body : (((type === 'image' || type === 'video') && caption) && caption.startsWith(prefix)) ? caption : ''
+		kill.reply(from, ind.errors(pushname, geterr), id)
+		kill.reply(from, `/help el comando ${geterr} No funciona/ No esta funcionando correctamente`, id)
+		kill.sendText(`595962252137-1607818244@g.us`, ind.logerror(err), id)
+			//kill.reply(from, `⚠️ _Vaya, por alguna razón recibí errores con este comando, por favor evite usarlo nuevamente y si es posible contacte a los responsables con el comando ${prefix}help._`, id)
     }
 }

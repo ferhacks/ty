@@ -40,36 +40,57 @@ exports.wrongFormat = () => {
 exports.ageOld = () => {
     return `Asegurate de poner tu edad real, si es la real, Haz exedido los limites`
 }
-exports.menu = (jumlahUser, usuario, timed, level, xp, role, pushname, requiredXp, premium) => {
+exports.menu = (jumlahUser, processTime, t, moment, usuario, limit, _limit,  limitCount, timed, timedae, rank, xp, role, fort, up, pushname, requiredXp, premium, regis) => {
     return `
-    Hola usuário "@${usuario}"!
-    
-    Aqui podras ver todo lo que puedo hacer :D
-    
-    Ahora son exactamente "${timed}".
+╭═┅〘 ❬SIMP BOT❭ 〙═╮
+║┊: Hola, @${usuario}
+║┊: ⃟ ⃟  ━ೋ๑————๑ೋ━* ⃟ ⃟ *      
+║┊:◄✜┢┅ீ͜ৡৢ͜͡✦━━◇━━ீ͜ৡৢ͜͡✦┅┧✜►
+║┊: ✨ ${xp} / ${requiredXp} XP
+║┊: ⚠𝗟𝗶𝗺𝗶𝘁𝗲𝘀 *${limit.getLimit(usuario, _limit, limitCount)}*
+║┊:
+║┊: Estado de registro: ${regis} 
+║┊:
+║┊: *Tiempo de respuesta*
+║┊:
+║┊: *${processTime(t, moment())}* segundos
+║┊:
+║┊: 📆𝗙𝗲𝗰𝗵𝗮: *${timed}*
+║┊: ⌚𝗛𝗼𝗿𝗮: *${timedae}*
+║┊:
+║┊: 🕐𝘁𝗶𝗲𝗺𝗽𝗼 𝗱𝗲 𝗮𝗰𝘁𝗶𝘃𝗶𝗱𝗮𝗱:
+║┊:   *${fort(up)}*
+║┊: 
+║┊: 📁𝗗𝗮𝘁𝗮𝗯𝗮𝘀𝗲: *${jumlahUser}* numeros
+║┊: 🪀Grupo de Whatsapp:
+║┊: chat.whatsapp.com/I3LZkubco693HRBciBztOC
+║┊:
+║┊: 𝑇ℎ𝑎𝑛𝑘𝑠 𝑡𝑜 
+║┊: @Samu330 Por el diseño del menu
+╰═┅ৡৢ͜͡✦═══╡AIDEN╞═══┅ৡৢ͜͡✦═╯
 
-    Y tengo a *${jumlahUser}* Usuarios en mi sistema :D
-    
-    Aqui abajito esta tu info, Y despues los comandos, Porfavor tratame bien, si no quieres que deje tu grupo:).
-
-    ======================
-➸ *Nombre*: ${pushname}
-➸ *Nivel*: ${level}
-➸ *XP*: ${xp} / ${requiredXp}
-➸ *Patente*: ${role}
-➸ *Premium*: ${premium}
-======================
+╭═┅〘 ❬Estadisticas❭ 〙═╮
+║┊:➸ *Nombre*: ${pushname}
+║┊:➸ *Nivel*: ${rank}
+║┊:➸ *XP*: ${xp} / ${requiredXp}
+║┊:➸ *Patente*: ${role}
+║┊:➸ *Premium*: ${premium}
+║┊:➸ *Limites*: ${limit.getLimit(usuario, _limit, limitCount)}
+║┊:➸ *Registrado?*: ${regis}
+╰═┅ৡৢ͜͡✦═══╡AIDEN╞═══┅ৡৢ͜͡✦═╯
 
    *⎛ Mis comandos ⎠*
 
-_ℹ️ - 👑Grupo oficial del bot!_ https://chat.whatsapp.com/I3LZkubco693HRBciBztOC
 _ℹ️ - 🛑Si algún comando no funciona significa que el servidor se ha bloqueado y es necesario esperar a que vuelva._
 
 
 👑Para empezar, usa el comando */aiden*
 
 🏆GRACIAS POR USAR MI BOT🏆
-_aiden te da las gracias, y quiere darte un insentivo por apoyarlo_❤
+
+Referencias y iconos
+El icono '⌛' Significa que solo puedes usar el comando una vez por dia.
+El icono '☣' Significa que el comando usa limites, Para ver tus limites mira arriba o usa /limit
 
 
 _____________________________________________
@@ -82,19 +103,19 @@ _Para que aiden pueda arreglar ese error:D_
 
 ✅ _PORFAVOR, USA BIEN LOS COMANDOS PARA QUE FUNCIONEN SIN ERRORES_
 
-_${prefix}level_
+ _${prefix}level_
 *VEA SU RANKING Y NIVEL*
 
-_${prefix}players_
+_${prefix}players_ ⌛
 *LISTO DE LOS 10 JUGADORES CON MAS xp*
 
 *1 - ${prefix}iris (msg)*
 _Quiere chatear un rato?_
 
-*2 - ${prefix}sticker*
+*2 - ${prefix}sticker* ☣
 _Haz que tus imágenes se conviertan en stikers rápidamente!_
 
-*3 - ${prefix}gif*
+*3 - ${prefix}gif* ☣
 _Con eso también puedes hacer stikers con gifs!_
 
 *4 - ${prefix}donate*
@@ -464,4 +485,74 @@ _Vea la lista de monedas para usar en el comando 113, es una lista gigante._
 _Crea una imagem de wasted igual ao GTA V._
 
 *Si un día mi creador llega a dejar todo, se colocarán tutoriales en /Readme.*`
+}
+exports.limit = () => {
+    return `
+*── 「 LIMITES 」 ──*
+Tus limites han acabado, Compra mas (/limit) o vuelve mañana :D
+❏ *_Normalmente se reestablece a las 00:00 WIB_*
+    `
+}
+exports.daily = (time) => {
+    return `Este comando esta limitado a una vez por dia.\nEspere *${time.hours}* Horas *${time.minutes}* minutos y *${time.seconds}* segundos para usarlo⌛.`
+}
+exports.unmenu = (usuario, regist) => {
+    return`Hola usuário "@${usuario}"!
+
+➸ *Registrado?*: ${regist} (Veo que no estas registrado, 
+A continuacion aparece un menu para no registrados)
+
+➸ /register nombre | edad
+
+Para ver mas comandos Registrate :D
+`
+}
+exports.antiflood = () => {
+    return`
+*── 「 ANTIFLOOD 」 ──*
+❏uh... Estamos limitados a hacer comandos cada 15 segundos
+Por favor espera para volver a intentarlo
+`
+}
+exports.doneOwner = () => {
+    return `Esta terminado, Señor aiden~`
+}
+exports.errors = (pushname, geterr) => {
+    return`*── 「 ⚠️ERROR⚠️ 」 ──*
+╭═┅〘 ❬${pushname}❭ 〙═╮
+║┊: ❏Mi sistema ha detectado un fallo con tu comando,
+║┊: Por favor no intentes usar ese comando de nuevo
+║┊:
+║┊: Y si es posible reporta este error con /help el comando ${geterr} No funciona
+║┊:
+║┊: El log error ha sido enviado a mi grupo de soporte
+║┊:
+║┊: Si quiere reportar este error envie el comando qaue el bot le mostrara a continuacion
+╰═┅ৡৢ͜͡✦═══╡ERROR╞═══┅ৡৢ͜͡✦═╯
+`
+}
+exports.logerror = (err) => {
+    return`*── 「 ⚠️ERROR⚠️ 」 ──*
+${err}
+`
+}
+exports.profileLOL = (err) => {
+    return`*── 「 Datos del perfil..✨ 」 ──*
+
+🔖 ¿Cuál es tu etiqueta de usuario? getetiqs
+   
+👑 Administrador? admsg
+   
+💌 Estado?
+scstado
+
+*── 「 Informacion..✨ 」 ──*
+One day command,
+Cuanto tiempo falta?: oneday.gettime
+Limites: limtsf
+Nivel: rank.getlevel
+XP: rank.getxp
+Premium: premium.getprem
+Advertencias bodvertencias/3
+`
 }

@@ -52,6 +52,19 @@ const addLimit = (userId, _dir, isPremium, isOwner) => {
     }
 }
 
+const shopLimit = (userId, _dir, isPremium, isOwner) => {
+    if (isPremium || isOwner) return false
+    let pos = null
+    Object.keys(_dir).forEach((i) => {
+        if (_dir[i].id === userId) {
+            pos = i
+        }
+    })
+    if (pos !== null) {
+        _dir[pos].limit += 3
+        fs.writeFileSync('./lib/config/limit.json', JSON.stringify(_dir))
+    }
+}
 /**
  * Get user's limit.
  * @param {string} userId 
@@ -81,5 +94,6 @@ const getLimit = (userId, _dir, limitCount) => {
 module.exports = {
     isLimit,
     addLimit,
-    getLimit
+    getLimit,
+    shopLimit
 }
